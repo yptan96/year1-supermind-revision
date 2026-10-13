@@ -17,7 +17,7 @@
 
 const { kv } = require('@vercel/kv');
 
-const TEACHER_PIN = '1234';
+const TEACHER_PIN = '961123';
 
 function studentKey(name, className) {
   return `${String(name || '').trim()}__${String(className || '').trim()}`;

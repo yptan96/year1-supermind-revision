@@ -10,7 +10,7 @@
 
 const { kv } = require('@vercel/kv');
 
-const TEACHER_PIN = '1234';
+const TEACHER_PIN = '961123';
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {

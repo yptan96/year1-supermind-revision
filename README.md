@@ -40,5 +40,5 @@ Basis: each pupil's best attempt per skill, averaged within the DSKP skill (Read
 Speaking has no TP: the game only counts rounds done, the teacher judges. Descriptors are copied from the DSKP Year 1 SJK Performance Standards Guides.
 
 ## Before real pupils use it
-1. Change `TEACHER_PIN` from `1234` in `app.js`, `api/comment.js` and `api/clear-results.js` (all three the same).
+1. `TEACHER_PIN` is set in `app.js`, `api/comment.js` and `api/clear-results.js` (all three the same).
 2. Deploy with `edu-game-teacher-tools/references/deployment-checklist.md` (GitHub, Vercel, connect KV, redeploy, check the live commit).

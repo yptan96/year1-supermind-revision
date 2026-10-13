@@ -10,7 +10,7 @@ UNITS.forEach(u => { u.items.forEach(i => itemById[i.id] = i); u.sentences.forEa
 const ALL_ITEMS = UNITS.flatMap(u => u.items);
 
 // Keep in sync with api/comment.js and api/clear-results.js. CHANGE BEFORE REAL PUPILS USE IT.
-const TEACHER_PIN = '1234';
+const TEACHER_PIN = '961123';
 const SESSION_KEY = 'eduAppSession_v1';
 const SESSION_MAX_AGE_MS = 3 * 60 * 60 * 1000; // 3 hours
 const LOCAL_KEY = 'eduResultsLocal_v1';
