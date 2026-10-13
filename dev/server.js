@@ -4,7 +4,7 @@ const http = require('http'), fs = require('fs'), path = require('path'), Module
 const ROOT = path.join(__dirname, '..');
 const lists = {}, hashes = {};
 const kv = {
-  rpush: async (k, v) => { (lists[k] = lists[k] || []).push(JSON.parse(JSON.stringify(v))); },
+  rpush: async (k, ...vs) => { (lists[k] = lists[k] || []).push(...vs.map(v => JSON.parse(JSON.stringify(v)))); },
   lrange: async (k) => lists[k] || [],
   del: async (k) => { delete lists[k]; },
   hget: async (k, f) => (hashes[k] || {})[f],

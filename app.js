@@ -99,7 +99,7 @@ const resultsStore = {
       const r = await fetch('/api/leaderboard');
       if (!r.ok) throw new Error('no storage');
       const data = await r.json();
-      return { records: Array.isArray(data) ? data : [], remote: true };
+      return { records: (Array.isArray(data) ? data : []).filter(r => parseSlug(r.game)), remote: true }; // shared database: keep only this app's records
     } catch (e) { return { records: this._local(), remote: false }; }
   }
 };
@@ -634,7 +634,7 @@ const acts = {
   csv() { downloadCsv(); },
   async clearall() {
     if (!askPin()) return;
-    if (!window.confirm('Delete ALL results for ALL classes? This cannot be undone.')) return;
+    if (!window.confirm('Delete all Year 1 practice results for all classes? This cannot be undone. (Results of other games are not touched.)')) return;
     try {
       const r = await fetch('/api/clear-results', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pin: teacherPin }) });
       if (r.ok) { try { localStorage.removeItem(LOCAL_KEY); } catch (e) {} showToast('All results cleared'); renderTeacher(); }

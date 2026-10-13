@@ -1,5 +1,5 @@
 /**
- * Wipes every saved game result — used by Teacher View's "Clear All Results" button.
+ * Removes this app's (Year 1) saved game results only; other games' results in the shared list are kept — used by Teacher View's "Clear All Results" button.
  * Leaves teacher comments untouched (that's a separate Redis hash, "results" is only
  * the scores list).
  *
@@ -25,8 +25,14 @@ module.exports = async function handler(req, res) {
   }
 
   try {
+    // The database is shared with other games (Y5/Y6 UASA etc.), so only remove THIS app's records.
+    // This app's slugs look like u0-listen-s1 or mix-write-s2; everything else is kept.
+    const mine = /^(u\d|mix)-[a-z]+-s\d$/;
+    const all = await kv.lrange('results', 0, -1);
+    const keep = all.filter(r => !(r && mine.test(String(r.game))));
     await kv.del('results');
-    res.status(200).json({ ok: true });
+    if (keep.length) await kv.rpush('results', ...keep);
+    res.status(200).json({ ok: true, removed: all.length - keep.length, kept: keep.length });
   } catch (err) {
     console.error('KV clear failed:', err);
     res.status(500).json({ ok: false, error: 'Storage not connected yet' });
