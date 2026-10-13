@@ -13,7 +13,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const records = await kv.lrange('results', 0, -1);
+    const records = await kv.lrange(kv.RESULTS_KEY, 0, -1);
     res.status(200).json(records);
   } catch (err) {
     console.error('KV read failed:', err);

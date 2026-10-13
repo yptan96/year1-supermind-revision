@@ -5,7 +5,13 @@
  */
 const { createClient } = require('@vercel/kv');
 
-module.exports = createClient({
+const client = createClient({
   url: process.env.KV_REST_API_URL || process.env.year1SupermindRevision_KV_REST_API_URL,
   token: process.env.KV_REST_API_TOKEN || process.env.year1SupermindRevision_KV_REST_API_TOKEN
 });
+
+// This app's own keys. The database is shared with other games, so never use the plain 'results' / 'comments' keys here.
+client.RESULTS_KEY = 'y1-supermind-results';
+client.COMMENTS_KEY = 'y1-supermind-comments';
+
+module.exports = client;

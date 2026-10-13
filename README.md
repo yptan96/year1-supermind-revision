@@ -39,6 +39,9 @@ TP is worked out when shown, not stored. Bands: 0-29 TP1, 30-44 TP2, 45-59 TP3, 
 Basis: each pupil's best attempt per skill, averaged within the DSKP skill (Reading = Read, Sounds, Words; Writing = Write, Sentences).
 Speaking has no TP: the game only counts rounds done, the teacher judges. Descriptors are copied from the DSKP Year 1 SJK Performance Standards Guides.
 
+## Storage
+One Vercel KV database is shared by several games. This app saves only under its own keys, `y1-supermind-results` and `y1-supermind-comments` (set in `api/_kv.js`), so its Clear All never touches another game's results. Settings names are read with or without the `year1SupermindRevision_` prefix.
+
 ## Before real pupils use it
 1. `TEACHER_PIN` is set in `app.js`, `api/comment.js` and `api/clear-results.js` (all three the same).
 2. Deploy with `edu-game-teacher-tools/references/deployment-checklist.md` (GitHub, Vercel, connect KV, redeploy, check the live commit).

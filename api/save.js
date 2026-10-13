@@ -41,7 +41,7 @@ module.exports = async function handler(req, res) {
   };
 
   try {
-    await kv.rpush('results', record);
+    await kv.rpush(kv.RESULTS_KEY, record);
     res.status(200).json({ ok: true });
   } catch (err) {
     console.error('KV save failed:', err);

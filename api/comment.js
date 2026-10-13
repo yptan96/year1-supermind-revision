@@ -28,10 +28,10 @@ module.exports = async function handler(req, res) {
     const { name, className } = req.query || {};
     try {
       if (name) {
-        const comment = await kv.hget('comments', studentKey(name, className));
+        const comment = await kv.hget(kv.COMMENTS_KEY, studentKey(name, className));
         res.status(200).json({ ok: true, comment: comment || '' });
       } else {
-        const all = await kv.hgetall('comments');
+        const all = await kv.hgetall(kv.COMMENTS_KEY);
         res.status(200).json({ ok: true, comments: all || {} });
       }
     } catch (err) {
@@ -52,7 +52,7 @@ module.exports = async function handler(req, res) {
       return;
     }
     try {
-      await kv.hset('comments', { [studentKey(body.name, body.className)]: String(body.comment || '').slice(0, 500) });
+      await kv.hset(kv.COMMENTS_KEY, { [studentKey(body.name, body.className)]: String(body.comment || '').slice(0, 500) });
       res.status(200).json({ ok: true });
     } catch (err) {
       console.error('KV comment save failed:', err);
