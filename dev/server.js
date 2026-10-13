@@ -12,7 +12,7 @@ const kv = {
   hgetall: async (k) => hashes[k] || null,
 };
 const orig = Module._load;
-Module._load = function (req, ...a) { return req === '@vercel/kv' ? { kv } : orig.call(this, req, ...a); };
+Module._load = function (req, ...a) { return req === '@vercel/kv' ? { kv, createClient: () => kv } : orig.call(this, req, ...a); };
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.png': 'image/png', '.mp3': 'audio/mpeg', '.json': 'application/json', '.css': 'text/css' };
 http.createServer((req, res) => {
   const u = new URL(req.url, 'http://x');

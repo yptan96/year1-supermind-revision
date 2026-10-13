@@ -15,7 +15,7 @@
  * all, this copy is what actually protects the write.
  */
 
-const { kv } = require('@vercel/kv');
+const kv = require('./_kv');
 
 const TEACHER_PIN = '961123';
 

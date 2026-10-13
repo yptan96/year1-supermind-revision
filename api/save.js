@@ -13,7 +13,7 @@
  * That's it — no URL to paste anywhere, unlike the Google Sheets version.
  */
 
-const { kv } = require('@vercel/kv');
+const kv = require('./_kv');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {

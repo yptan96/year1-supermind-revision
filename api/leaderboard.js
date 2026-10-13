@@ -4,7 +4,7 @@
  * in this file — the env vars Vercel injects are enough).
  */
 
-const { kv } = require('@vercel/kv');
+const kv = require('./_kv');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {

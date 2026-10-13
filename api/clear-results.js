@@ -8,7 +8,7 @@
  * Keep TEACHER_PIN in sync with index.html and api/comment.js if you change it.
  */
 
-const { kv } = require('@vercel/kv');
+const kv = require('./_kv');
 
 const TEACHER_PIN = '961123';
 
