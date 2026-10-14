@@ -1,0 +1,21 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Reader test</title></head><body>
+<pre id="out">running...</pre>
+<script src="../../recognize.js"></script>
+<script>
+(async () => {
+  await Recognizer.load('../../models/letters.json');
+  const T = await (await fetch('test_strokes.json')).json();
+  let ok = 0, okCI = 0, charOK = 0, charN = 0; const bad = []; const t0 = performance.now();
+  const lev = (a, b) => { const d = []; for (let i = 0; i <= a.length; i++) { d[i] = [i]; } for (let j = 1; j <= b.length; j++) d[0][j] = j; for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return d[a.length][b.length]; };
+  for (const t of T.tests) {
+    const r = Recognizer.read(t.strokes, T.padW, T.padH);
+    const got = r.text;
+    if (got === t.word) ok++; else bad.push(t.font + ' ' + t.word + ' -> ' + got);
+    if (got.toLowerCase() === t.word.toLowerCase()) okCI++;
+    charN += t.word.length; charOK += t.word.length - Math.min(t.word.length, lev(got, t.word));
+  }
+  const ms = performance.now() - t0;
+  document.getElementById('out').textContent = `words exact: ${ok}/${T.tests.length} (${(100 * ok / T.tests.length).toFixed(1)}%)\nwords right ignoring big/small: ${okCI}/${T.tests.length}\nletters right: ${(100 * charOK / charN).toFixed(1)}%\ntime per word: ${(ms / T.tests.length).toFixed(0)} ms\n\nmistakes (first 60):\n` + bad.slice(0, 60).join('\n');
+  window.__done = true;
+})();
+</script></body></html>
