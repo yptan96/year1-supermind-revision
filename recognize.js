@@ -1,6 +1,7 @@
 /* On-device handwriting reader (nothing leaves the phone).
    Recognizer.load('models/letters.json')  then  Recognizer.read(strokes, padW, padH) -> { text, chars:[{ch, conf, alt:[[ch,p],..], box}] }
    strokes = [ [[x,y],[x,y],...], ... ]  in pad pixels, in the order drawn.
+   opts.noSpaces = true: never put spaces in the text (the pupil adds spaces with a Space button).
    Steps: 1 group strokes into letters  2 read each letter with a small neural network  3 decide BIG or small letters from their height
           4 find spaces and full stops / ? ! ' - . The pad has guide lines at 25% / 50% / 75% of its height (top, middle, baseline). */
 (function (root) {
@@ -202,7 +203,7 @@
     }
     let text = ''; const out = [];
     items.forEach((it, k) => {
-      if (k > 0) { const gap = it.x0 - items[k - 1].x1; const punct = it.c.mark && it.c.ch === '.'; if (gap > Math.max(0.9 * xh, 0.18 * padH) && !punct && !(it.c.mark && it.c.ch === "'")) { text += ' '; out.push({ ch: ' ', conf: 1, alt: [], box: null }); } }
+      if (k > 0) { const gap = it.x0 - items[k - 1].x1; const punct = it.c.mark && it.c.ch === '.'; if (!opts.noSpaces && gap > Math.max(0.9 * xh, 0.18 * padH) && !punct && !(it.c.mark && it.c.ch === "'")) { text += ' '; out.push({ ch: ' ', conf: 1, alt: [], box: null }); } }
       text += it.c.ch; out.push({ ch: it.c.ch, conf: it.c.conf, alt: it.c.alt, box: it.c.b });
     });
     return { text, chars: out, xh, base, groups: groups.length };
