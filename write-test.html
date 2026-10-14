@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Write test</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#26264A;--cream:#FFF7E8;--blue:#3B5BDB;--green:#2F9E44;--red:#C92A2A}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:'Nunito',system-ui,sans-serif;font-size:18px;line-height:1.35}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+h1,h2{font-family:'Fredoka',sans-serif;font-weight:600;margin:0 0 8px}
+h1{font-size:28px}h2{font-size:22px}
+.card{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:16px;margin:0 0 16px}
+.note{font-size:15px;color:#4A4A6A;font-weight:700}
+.target{font-family:'Fredoka',sans-serif;font-size:32px;font-weight:600;line-height:1.2}
+label{display:block;font-weight:800;margin:10px 0 6px}
+textarea{width:100%;min-height:96px;font-family:'Nunito',sans-serif;font-size:28px;font-weight:700;border:3px solid var(--ink);border-radius:14px;padding:8px 12px;background:repeating-linear-gradient(transparent,transparent 41px,#CDE7FF 41px,#CDE7FF 43px)}
+button{min-height:52px;border-radius:16px;border:3px solid var(--ink);background:#fff;font:800 18px 'Nunito',sans-serif;padding:0 22px;cursor:pointer;color:var(--ink)}
+.go{background:var(--green);border-color:var(--green);color:#fff;font-family:'Fredoka',sans-serif;font-size:24px;font-weight:600}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.cmp{font-size:24px;font-weight:800;margin:6px 0;word-wrap:break-word}
+.cmp small{display:block;font-size:14px;color:#4A4A6A;font-weight:800}
+.bad{background:#FFE3E3;color:var(--red);border-radius:6px;padding:0 4px}
+.good{color:#2B8A3E}
+ul.fix{margin:6px 0 0;padding-left:22px}
+ul.fix li{font-size:20px;font-weight:800;margin:6px 0}
+.ok{font-family:'Fredoka',sans-serif;font-size:28px;color:#2B8A3E}
+code{background:#EFE8D6;padding:2px 6px;border-radius:6px;font-size:16px;word-break:break-all}
+canvas{width:100%;height:220px;background:#fff;border:3px solid var(--ink);border-radius:14px;touch-action:none;display:block;background:repeating-linear-gradient(#fff,#fff 54px,#CDE7FF 54px,#CDE7FF 56px)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Write test</h1>
+<p class="note">For Ms Tan: try this on your phone. Nothing is saved. Is your phone's handwriting keyboard working here, and does the checking feel right?</p>
+
+<div class="card">
+ <h2>1. Write it, then check it</h2>
+ <p class="note">Copy this sentence. Use your phone's handwriting keyboard (or the normal keyboard).</p>
+ <div class="target" id="target"></div>
+ <label for="ans">Write here.</label>
+ <textarea id="ans" rows="2" lang="en" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" aria-label="Write your answer here"></textarea>
+ <div class="row"><button class="go" id="check">Check</button><button id="next">Next sentence</button><button id="clear">Clear</button></div>
+ <div id="result" aria-live="polite"></div>
+ <p class="note" style="margin-top:12px">What the keyboard sent (spaces shown as &middot;):<br><code id="raw">(nothing yet)</code></p>
+</div>
+
+<div class="card">
+ <h2>2. Finger writing pad</h2>
+ <p class="note">Write with your finger, stylus or mouse. The page should not scroll while you write.</p>
+ <canvas id="pad" aria-label="Writing pad"></canvas>
+ <div class="row"><button id="padClear">Clear pad</button></div>
+</div>
+
+<div class="card">
+ <h2>How to turn on the handwriting keyboard</h2>
+ <p class="note"><b>Android (Gboard):</b> Settings &rarr; System &rarr; Languages &rarr; On-screen keyboard &rarr; Gboard &rarr; Languages &rarr; English &rarr; turn on <b>Handwriting</b>. Then tap the box and use the keyboard key to switch to handwriting.<br>
+ <b>Samsung:</b> keyboard settings &rarr; Languages and types &rarr; English &rarr; add <b>Handwriting</b>.<br>
+ <b>iPad with Apple Pencil:</b> Settings &rarr; Apple Pencil &rarr; Scribble. Write straight into the box.<br>
+ <b>iPhone:</b> no English finger-handwriting keyboard. Use the normal keyboard.</p>
+</div>
+</div>
+
+<script src="check.js"></script>
+<script>
+const S = [
+ 'The cat is on the desk.','The spider is in the pencil case.','The ball is under the bag.','The frog is on the book.',
+ 'The ruler is in the notebook.','The lizard is under the car.','The doll is on the go-kart.','The rat is in the desk.',
+ 'The plane is under the desk.','The duck is on the bike.','I have got a cheese sandwich.','I haven’t got a steak.',
+ 'Is it a pen?','The tiger hides in the tall grass.'
+];
+let i = 0;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function show() { $('target').textContent = S[i]; $('ans').value = ''; $('result').innerHTML = ''; $('raw').textContent = '(nothing yet)'; }
+function rawView(v) { return v.length ? v.split('').map(c => c === ' ' ? '·' : c === '\n' ? '↵' : c).join('') : '(empty)'; }
+$('ans').addEventListener('input', e => { $('raw').textContent = rawView(e.target.value); });
+$('check').onclick = () => {
+  const exp = S[i].replace('’', "'"), act = $('ans').value.replace(/’/g, "'");
+  const r = checkAnswer(exp, act);
+  const my = r.my.map(w => w.bad ? '<span class="bad">' + esc(w.text) + '</span>' : esc(w.text)).join(' ');
+  let h = '<div class="cmp"><small>Teacher’s answer</small><span class="good">' + esc(S[i]) + '</span></div>' +
+          '<div class="cmp"><small>My answer</small>' + (my || '<i>(empty)</i>') + '</div>';
+  if (r.ok) h += '<div class="ok">Perfect! Big letter, spaces and full stop are all correct.</div>';
+  else h += '<h2 style="margin-top:10px">What should I correct?</h2><ul class="fix">' + r.issues.map(x => '<li>' + esc(x.say) + '</li>').join('') + '</ul>';
+  $('result').innerHTML = h;
+};
+$('next').onclick = () => { i = (i + 1) % S.length; show(); };
+$('clear').onclick = () => { $('ans').value = ''; $('result').innerHTML = ''; $('raw').textContent = '(nothing yet)'; };
+show();
+
+// finger / mouse / stylus pad (pointer events; touch-action:none stops the page scrolling)
+const cv = $('pad'), cx = cv.getContext('2d');
+function fit() { const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1; cv.width = r.width * d; cv.height = r.height * d; cx.scale(d, d); cx.lineWidth = 6; cx.lineCap = 'round'; cx.lineJoin = 'round'; cx.strokeStyle = '#26264A'; }
+fit(); window.addEventListener('resize', fit);
+let down = false;
+const pt = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+cv.addEventListener('pointerdown', e => { down = true; cv.setPointerCapture(e.pointerId); const [x, y] = pt(e); cx.beginPath(); cx.moveTo(x, y); cx.lineTo(x + .1, y + .1); cx.stroke(); });
+cv.addEventListener('pointermove', e => { if (!down) return; const [x, y] = pt(e); cx.lineTo(x, y); cx.stroke(); });
+['pointerup', 'pointercancel'].forEach(t => cv.addEventListener(t, () => { down = false; }));
+$('padClear').onclick = () => { cx.clearRect(0, 0, cv.width, cv.height); };
+</script>
+</body>
+</html>
