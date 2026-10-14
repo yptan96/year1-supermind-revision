@@ -3,7 +3,7 @@
    strokes = [ [[x,y],[x,y],...], ... ]  in pad pixels, in the order drawn.
    opts.noSpaces = true: never put spaces in the text (the pupil adds spaces with a Space button).
    Steps: 1 group strokes into letters  2 read each letter with a small neural network  3 decide BIG or small letters from their height
-          4 find spaces and full stops / ? ! ' - . The pad has guide lines at 25% / 50% / 75% of its height (top, middle, baseline). */
+          4 find spaces and full stops / ? ! ' - . The pad has four writing lines at 14% / 40% / 66% / 92% of its height (top, x-height, baseline, bottom). */
 (function (root) {
   'use strict';
   let M = null; // model
@@ -89,7 +89,7 @@
     opts = opts || {};
     const strokes = strokes0.filter(s => s && s.length);
     if (!strokes.length) return { text: '', chars: [] };
-    const guide = { top: .25 * padH, mid: .5 * padH, base: .75 * padH };
+    const guide = { top: .14 * padH, mid: .40 * padH, base: .66 * padH };   // the four writing lines are at 14% / 40% / 66% / 92% of the pad height
     const xhDefault = guide.base - guide.mid;
     const tiny = (opts.tinyFrac || 0.10) * padH, join = (opts.joinFrac || 0.045) * padH;
 

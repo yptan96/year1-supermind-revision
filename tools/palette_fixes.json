@@ -1,16 +1,68 @@
 {
- "monster": ["blue", "green", "yellow"],
- "pencil-case": ["blue", "green"],
- "bag": ["blue", "green", "red", "orange"],
- "rat": ["grey", "pink"],
- "elephant": ["grey", "pink"],
- "dog": ["orange", "brown", "white"],
- "desk": ["yellow", "red", "orange", "blue", "green"],
- "ruler": ["green"],
- "computer-game": ["blue", "green", "red"],
- "duck": ["yellow", "orange"],
- "pencil": ["yellow", "pink"],
- "pen": ["blue", "red", "pink"],
- "book": ["blue", "red"],
- "spider": ["black"]
+ "monster": [
+  "blue",
+  "green",
+  "yellow"
+ ],
+ "pencil-case": [
+  "blue",
+  "green"
+ ],
+ "bag": [
+  "blue",
+  "green",
+  "red",
+  "orange"
+ ],
+ "rat": [
+  "grey",
+  "pink"
+ ],
+ "elephant": [
+  "grey",
+  "pink"
+ ],
+ "dog": [
+  "orange",
+  "brown",
+  "white"
+ ],
+ "desk": [
+  "yellow",
+  "red",
+  "orange",
+  "blue",
+  "green"
+ ],
+ "ruler": [
+  "green"
+ ],
+ "computer-game": [
+  "blue",
+  "green",
+  "red"
+ ],
+ "duck": [
+  "yellow",
+  "orange"
+ ],
+ "pencil": [
+  "yellow",
+  "pink"
+ ],
+ "pen": [
+  "blue",
+  "red",
+  "pink"
+ ],
+ "book": [
+  "blue",
+  "red"
+ ],
+ "spider": [
+  "black"
+ ],
+ "notebook": [
+  "blue"
+ ]
 }

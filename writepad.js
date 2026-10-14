@@ -47,9 +47,12 @@
     }
     function redraw() {
       px.clearRect(0, 0, W, H);
-      px.lineWidth = 1.5; px.strokeStyle = '#B7D6F5'; px.setLineDash([6, 6]);
-      [.25, .5].forEach(f => { px.beginPath(); px.moveTo(8, H * f); px.lineTo(W - 8, H * f); px.stroke(); });
-      px.setLineDash([]); px.lineWidth = 2.5; px.strokeStyle = '#7FB2EA'; px.beginPath(); px.moveTo(8, H * .75); px.lineTo(W - 8, H * .75); px.stroke();
+      // four-line writing paper: top line, dotted x-height line, baseline (solid, darker), bottom line
+      const L = [.14, .40, .66, .92].map(f => Math.round(H * f) + .5);
+      px.setLineDash([]); px.lineWidth = 2; px.strokeStyle = '#B7D6F5';
+      [L[0], L[3]].forEach(y => { px.beginPath(); px.moveTo(8, y); px.lineTo(W - 8, y); px.stroke(); });
+      px.setLineDash([7, 6]); px.beginPath(); px.moveTo(8, L[1]); px.lineTo(W - 8, L[1]); px.stroke();
+      px.setLineDash([]); px.lineWidth = 3; px.strokeStyle = '#6FA8E8'; px.beginPath(); px.moveTo(8, L[2]); px.lineTo(W - 8, L[2]); px.stroke();
       px.lineCap = 'round'; px.lineJoin = 'round'; px.lineWidth = 7; px.strokeStyle = '#26264A';
       strokes.concat(cur ? [cur] : []).forEach(s => { px.beginPath(); s.forEach(([x, y], k) => k ? px.lineTo(x, y) : px.moveTo(x, y)); if (s.length === 1) px.lineTo(s[0][0] + .1, s[0][1]); px.stroke(); });
     }

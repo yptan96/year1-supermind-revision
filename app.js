@@ -362,7 +362,12 @@ function bodyWriteIt(q, st) {
   else {
     prompt = f.kind === 'pos' ? 'Look at the picture. Write a sentence.' : f.kind === 'have' ? 'Write what you have got.' : f.kind === 'havent' ? "Write what you haven't got." : 'What is this? Write a sentence.';
     const A = f.a ? WI.nouns[f.a].noun : '', B = f.b ? WI.nouns[f.b].noun : '', X = f.x ? WI.nouns[f.x].noun : '';
-    target = '<div class="wi-chips">' + (f.kind === 'pos' ? '<span class="wi-chip">' + esc(A) + '</span><span class="wi-dash">&ndash;</span><span class="wi-chip">' + esc(B) + '</span>' : '<span class="wi-chip">' + (f.kind === 'have' ? '&#10003; ' : f.kind === 'havent' ? '&#10007; ' : '') + esc(X) + '</span>') + '</div>';
+    // guide words that lead the pupil into the sentence: cat - desk / have got - monster / haven't got - cake / It's - ruler
+    const chip = t => '<span class="wi-chip">' + esc(t) + '</span>', dash = '<span class="wi-dash">&ndash;</span>';
+    target = '<div class="wi-chips">' + (f.kind === 'pos' ? chip(A) + dash + chip(B)
+      : f.kind === 'have' ? chip('have got') + dash + chip(X)
+      : f.kind === 'havent' ? chip("haven't got") + dash + chip(X)
+      : chip("It's") + dash + chip(X)) + '</div>';
     hint += ' You can add more details.';
     if (q.borrowed) hint += ' (This unit has no picture sentences yet, so here is one from another unit.)';
   }

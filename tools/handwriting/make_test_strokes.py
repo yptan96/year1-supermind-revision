@@ -37,7 +37,7 @@ def order(points):
         seen.add(cur); out[-1].append(cur)
     return out
 
-def strokes_for(word, fontpath, cap=100, spacing=0.18, wobble=True):
+def strokes_for(word, fontpath, cap=110, spacing=0.18, wobble=True):
     size = int(cap / 0.72)
     font = ImageFont.truetype(fontpath, size)
     W = int(len(word) * size * 0.95 + 200); H = 400
@@ -61,7 +61,7 @@ def strokes_for(word, fontpath, cap=100, spacing=0.18, wobble=True):
     minx = min(allx)
     res = []
     for s in out:
-        res.append([[p[0] - minx + 12 + (random.uniform(-1, 1) if wobble else 0), p[1] - base + 0.75 * PAD_H + (random.uniform(-1, 1) if wobble else 0)] for p in (s[::2] if len(s) > 6 else s)])
+        res.append([[p[0] - minx + 12 + (random.uniform(-1, 1) if wobble else 0), p[1] - base + 0.66 * PAD_H + (random.uniform(-1, 1) if wobble else 0)] for p in (s[::2] if len(s) > 6 else s)])
     return res
 
 random.seed(3)
