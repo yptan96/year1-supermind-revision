@@ -2631,7 +2631,7 @@ window.CONTENT = {
    "notebook": {
     "noun": "notebook",
     "syn": [],
-    "img": null,
+    "img": "notebook",
     "pal": [
      "blue"
     ],
