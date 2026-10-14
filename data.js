@@ -1923,6 +1923,18 @@ window.CONTENT = {
     "3.2.1",
     "3.3.1"
    ]
+  },
+  {
+   "id": "writeit",
+   "label": "Write it",
+   "dskp": "Writing",
+   "std": [
+    "4.1.2",
+    "4.2.1",
+    "4.2.4",
+    "4.3.1",
+    "4.3.2"
+   ]
   }
  ],
  "stdTitles": {
@@ -1988,5 +2000,922 @@ window.CONTENT = {
   "4": "Working towards exceeding expectations (A1 Low)",
   "5": "On track to exceed expectations (A1 Low)",
   "6": "Exceeds expectations (A1 Low)"
+ },
+ "writeit": {
+  "frames": [
+   {
+    "id": "p01",
+    "kind": "pos",
+    "unit": 3,
+    "a": "cat",
+    "b": "desk",
+    "prep": "on",
+    "scene": "scene-01",
+    "model": "The cat is on the desk."
+   },
+   {
+    "id": "p02",
+    "kind": "pos",
+    "unit": 3,
+    "a": "spider",
+    "b": "pencil-case",
+    "prep": "in",
+    "scene": "scene-02",
+    "model": "The spider is in the pencil case."
+   },
+   {
+    "id": "p03",
+    "kind": "pos",
+    "unit": 3,
+    "a": "ball",
+    "b": "bag",
+    "prep": "under",
+    "scene": "scene-03",
+    "model": "The ball is under the bag."
+   },
+   {
+    "id": "p04",
+    "kind": "pos",
+    "unit": 3,
+    "a": "frog",
+    "b": "book",
+    "prep": "on",
+    "scene": "scene-04",
+    "model": "The frog is on the book."
+   },
+   {
+    "id": "p05",
+    "kind": "pos",
+    "unit": 3,
+    "a": "ruler",
+    "b": "notebook",
+    "prep": "in",
+    "scene": "scene-05",
+    "model": "The ruler is in the notebook."
+   },
+   {
+    "id": "p06",
+    "kind": "pos",
+    "unit": 3,
+    "a": "lizard",
+    "b": "car",
+    "prep": "under",
+    "scene": "scene-06",
+    "model": "The lizard is under the car."
+   },
+   {
+    "id": "p07",
+    "kind": "pos",
+    "unit": 3,
+    "a": "doll",
+    "b": "go-kart",
+    "prep": "on",
+    "scene": "scene-07",
+    "model": "The doll is on the go-kart."
+   },
+   {
+    "id": "p08",
+    "kind": "pos",
+    "unit": 3,
+    "a": "rat",
+    "b": "desk",
+    "prep": "in",
+    "scene": "scene-08",
+    "model": "The rat is in the desk."
+   },
+   {
+    "id": "p09",
+    "kind": "pos",
+    "unit": 3,
+    "a": "plane",
+    "b": "desk",
+    "prep": "under",
+    "scene": "scene-09",
+    "model": "The plane is under the desk."
+   },
+   {
+    "id": "p10",
+    "kind": "pos",
+    "unit": 3,
+    "a": "duck",
+    "b": "bike",
+    "prep": "on",
+    "scene": "scene-10",
+    "model": "The duck is on the bike."
+   },
+   {
+    "id": "p11",
+    "kind": "pos",
+    "unit": 3,
+    "a": "pencil",
+    "b": "bag",
+    "prep": "in",
+    "scene": "scene-11",
+    "model": "The pencil is in the bag."
+   },
+   {
+    "id": "p12",
+    "kind": "pos",
+    "unit": 3,
+    "a": "monster",
+    "b": "train",
+    "prep": "under",
+    "scene": "scene-12",
+    "model": "The monster is under the train."
+   },
+   {
+    "id": "p13",
+    "kind": "pos",
+    "unit": 3,
+    "a": "rubber",
+    "b": "computer-game",
+    "prep": "on",
+    "scene": "scene-13",
+    "model": "The rubber is on the computer game."
+   },
+   {
+    "id": "p14",
+    "kind": "pos",
+    "unit": 3,
+    "a": "elephant",
+    "b": "kite",
+    "prep": "under",
+    "scene": "scene-14",
+    "model": "The elephant is under the kite."
+   },
+   {
+    "id": "p15",
+    "kind": "pos",
+    "unit": 3,
+    "a": "dog",
+    "b": "car",
+    "prep": "in",
+    "scene": "scene-15",
+    "model": "The dog is in the car."
+   },
+   {
+    "id": "p16",
+    "kind": "pos",
+    "unit": 3,
+    "a": "notebook",
+    "b": "ruler",
+    "prep": "on",
+    "scene": "scene-16",
+    "model": "The notebook is on the ruler."
+   },
+   {
+    "id": "p17",
+    "kind": "pos",
+    "unit": 3,
+    "a": "spider",
+    "b": "rubber",
+    "prep": "under",
+    "scene": "scene-17",
+    "model": "The spider is under the rubber."
+   },
+   {
+    "id": "p18",
+    "kind": "pos",
+    "unit": 3,
+    "a": "frog",
+    "b": "notebook",
+    "prep": "in",
+    "scene": "scene-18",
+    "model": "The frog is in the notebook."
+   },
+   {
+    "id": "p19",
+    "kind": "pos",
+    "unit": 3,
+    "a": "ball",
+    "b": "elephant",
+    "prep": "on",
+    "scene": "scene-19",
+    "model": "The ball is on the elephant."
+   },
+   {
+    "id": "p20",
+    "kind": "pos",
+    "unit": 3,
+    "a": "cat",
+    "b": "doll",
+    "prep": "under",
+    "scene": "scene-20",
+    "model": "The cat is under the doll."
+   },
+   {
+    "id": "h01",
+    "kind": "have",
+    "unit": 4,
+    "x": "sandwich",
+    "model": "I have got a cheese sandwich."
+   },
+   {
+    "id": "h02",
+    "kind": "have",
+    "unit": 4,
+    "x": "apple",
+    "model": "I have got an apple."
+   },
+   {
+    "id": "h03",
+    "kind": "have",
+    "unit": 4,
+    "x": "banana",
+    "model": "I have got a banana."
+   },
+   {
+    "id": "h04",
+    "kind": "have",
+    "unit": 4,
+    "x": "carrots",
+    "model": "I have got a carrot."
+   },
+   {
+    "id": "h05",
+    "kind": "have",
+    "unit": 4,
+    "x": "pizza",
+    "model": "I have got a pizza."
+   },
+   {
+    "id": "h06",
+    "kind": "have",
+    "unit": 4,
+    "x": "pencil",
+    "model": "I have got a pencil."
+   },
+   {
+    "id": "h07",
+    "kind": "have",
+    "unit": 4,
+    "x": "ruler",
+    "model": "I have got a ruler."
+   },
+   {
+    "id": "h08",
+    "kind": "have",
+    "unit": 4,
+    "x": "doll",
+    "model": "I have got a doll."
+   },
+   {
+    "id": "h09",
+    "kind": "have",
+    "unit": 4,
+    "x": "monster",
+    "model": "I have got an ugly monster."
+   },
+   {
+    "id": "h10",
+    "kind": "have",
+    "unit": 4,
+    "x": "frog",
+    "model": "I have got a frog."
+   },
+   {
+    "id": "n01",
+    "kind": "havent",
+    "unit": 4,
+    "x": "steak",
+    "model": "I haven't got a steak."
+   },
+   {
+    "id": "n02",
+    "kind": "havent",
+    "unit": 4,
+    "x": "cake",
+    "model": "I haven't got a cake."
+   },
+   {
+    "id": "n03",
+    "kind": "havent",
+    "unit": 4,
+    "x": "sausage",
+    "model": "I haven't got a sausage."
+   },
+   {
+    "id": "n04",
+    "kind": "havent",
+    "unit": 4,
+    "x": "chicken",
+    "model": "I haven't got a chicken."
+   },
+   {
+    "id": "n05",
+    "kind": "havent",
+    "unit": 4,
+    "x": "pen",
+    "model": "I haven't got a pen."
+   },
+   {
+    "id": "n06",
+    "kind": "havent",
+    "unit": 4,
+    "x": "notebook",
+    "model": "I haven't got a notebook."
+   },
+   {
+    "id": "n07",
+    "kind": "havent",
+    "unit": 4,
+    "x": "pencil-case",
+    "model": "I haven't got a pencil case."
+   },
+   {
+    "id": "n08",
+    "kind": "havent",
+    "unit": 4,
+    "x": "train",
+    "model": "I haven't got a train."
+   },
+   {
+    "id": "n09",
+    "kind": "havent",
+    "unit": 4,
+    "x": "bike",
+    "model": "I haven't got a bike."
+   },
+   {
+    "id": "n10",
+    "kind": "havent",
+    "unit": 4,
+    "x": "elephant",
+    "model": "I haven't got an elephant."
+   },
+   {
+    "id": "i_pen",
+    "kind": "its",
+    "unit": 1,
+    "x": "pen",
+    "model": "It's a pen."
+   },
+   {
+    "id": "i_pencil",
+    "kind": "its",
+    "unit": 1,
+    "x": "pencil",
+    "model": "It's a pencil."
+   },
+   {
+    "id": "i_ruler",
+    "kind": "its",
+    "unit": 1,
+    "x": "ruler",
+    "model": "It's a ruler."
+   },
+   {
+    "id": "i_rubber",
+    "kind": "its",
+    "unit": 1,
+    "x": "rubber",
+    "model": "It's a rubber."
+   },
+   {
+    "id": "i_bag",
+    "kind": "its",
+    "unit": 1,
+    "x": "bag",
+    "model": "It's a bag."
+   },
+   {
+    "id": "i_book",
+    "kind": "its",
+    "unit": 1,
+    "x": "book",
+    "model": "It's a book."
+   },
+   {
+    "id": "i_desk",
+    "kind": "its",
+    "unit": 1,
+    "x": "desk",
+    "model": "It's a desk."
+   },
+   {
+    "id": "i_chair",
+    "kind": "its",
+    "unit": 1,
+    "x": "chair",
+    "model": "It's a chair."
+   },
+   {
+    "id": "i_pencil-case",
+    "kind": "its",
+    "unit": 1,
+    "x": "pencil-case",
+    "model": "It's a pencil case."
+   },
+   {
+    "id": "i_kite",
+    "kind": "its",
+    "unit": 2,
+    "x": "kite",
+    "model": "It's a kite."
+   },
+   {
+    "id": "i_doll",
+    "kind": "its",
+    "unit": 2,
+    "x": "doll",
+    "model": "It's a doll."
+   },
+   {
+    "id": "i_monster",
+    "kind": "its",
+    "unit": 2,
+    "x": "monster",
+    "model": "It's a monster."
+   },
+   {
+    "id": "i_plane",
+    "kind": "its",
+    "unit": 2,
+    "x": "plane",
+    "model": "It's a plane."
+   },
+   {
+    "id": "i_ball",
+    "kind": "its",
+    "unit": 2,
+    "x": "ball",
+    "model": "It's a ball."
+   },
+   {
+    "id": "i_bike",
+    "kind": "its",
+    "unit": 2,
+    "x": "bike",
+    "model": "It's a bike."
+   },
+   {
+    "id": "i_go-kart",
+    "kind": "its",
+    "unit": 2,
+    "x": "go-kart",
+    "model": "It's a go-kart."
+   },
+   {
+    "id": "i_computer-game",
+    "kind": "its",
+    "unit": 2,
+    "x": "computer-game",
+    "model": "It's a computer game."
+   },
+   {
+    "id": "i_train",
+    "kind": "its",
+    "unit": 2,
+    "x": "train",
+    "model": "It's a train."
+   },
+   {
+    "id": "i_car",
+    "kind": "its",
+    "unit": 2,
+    "x": "car",
+    "model": "It's a car."
+   },
+   {
+    "id": "i_elephant",
+    "kind": "its",
+    "unit": 3,
+    "x": "elephant",
+    "model": "It's an elephant."
+   },
+   {
+    "id": "i_rat",
+    "kind": "its",
+    "unit": 3,
+    "x": "rat",
+    "model": "It's a rat."
+   },
+   {
+    "id": "i_lizard",
+    "kind": "its",
+    "unit": 3,
+    "x": "lizard",
+    "model": "It's a lizard."
+   },
+   {
+    "id": "i_frog",
+    "kind": "its",
+    "unit": 3,
+    "x": "frog",
+    "model": "It's a frog."
+   },
+   {
+    "id": "i_spider",
+    "kind": "its",
+    "unit": 3,
+    "x": "spider",
+    "model": "It's a spider."
+   },
+   {
+    "id": "i_duck",
+    "kind": "its",
+    "unit": 3,
+    "x": "duck",
+    "model": "It's a duck."
+   },
+   {
+    "id": "i_dog",
+    "kind": "its",
+    "unit": 3,
+    "x": "dog",
+    "model": "It's a dog."
+   },
+   {
+    "id": "i_cat",
+    "kind": "its",
+    "unit": 3,
+    "x": "cat",
+    "model": "It's a cat."
+   }
+  ],
+  "nouns": {
+   "cat": {
+    "noun": "cat",
+    "syn": [],
+    "img": "cat",
+    "pal": [
+     "orange",
+     "white"
+    ],
+    "file": "cat"
+   },
+   "desk": {
+    "noun": "desk",
+    "syn": [],
+    "img": "desk",
+    "pal": [
+     "yellow",
+     "red",
+     "orange",
+     "blue",
+     "green"
+    ],
+    "file": "desk"
+   },
+   "spider": {
+    "noun": "spider",
+    "syn": [],
+    "img": "spider",
+    "pal": [
+     "black"
+    ],
+    "file": "spider"
+   },
+   "pencil-case": {
+    "noun": "pencil case",
+    "syn": [],
+    "img": "pencil-case",
+    "pal": [
+     "blue",
+     "green"
+    ],
+    "file": "pencil-case"
+   },
+   "ball": {
+    "noun": "ball",
+    "syn": [],
+    "img": "ball",
+    "pal": [
+     "blue",
+     "green",
+     "red",
+     "yellow"
+    ],
+    "file": "ball"
+   },
+   "bag": {
+    "noun": "bag",
+    "syn": [],
+    "img": "bag",
+    "pal": [
+     "blue",
+     "green",
+     "red",
+     "orange"
+    ],
+    "file": "bag"
+   },
+   "frog": {
+    "noun": "frog",
+    "syn": [],
+    "img": "frog",
+    "pal": [
+     "green"
+    ],
+    "file": "frog"
+   },
+   "book": {
+    "noun": "book",
+    "syn": [],
+    "img": "book",
+    "pal": [
+     "blue",
+     "red"
+    ],
+    "file": "book"
+   },
+   "ruler": {
+    "noun": "ruler",
+    "syn": [],
+    "img": "ruler",
+    "pal": [
+     "green"
+    ],
+    "file": "ruler"
+   },
+   "notebook": {
+    "noun": "notebook",
+    "syn": [],
+    "img": null,
+    "pal": [],
+    "file": "notebook"
+   },
+   "lizard": {
+    "noun": "lizard",
+    "syn": [],
+    "img": "lizard",
+    "pal": [
+     "green",
+     "yellow"
+    ],
+    "file": "lizard"
+   },
+   "car": {
+    "noun": "car",
+    "syn": [],
+    "img": "car",
+    "pal": [
+     "red",
+     "blue",
+     "yellow"
+    ],
+    "file": "car"
+   },
+   "doll": {
+    "noun": "doll",
+    "syn": [],
+    "img": "doll",
+    "pal": [
+     "pink",
+     "orange",
+     "brown"
+    ],
+    "file": "doll"
+   },
+   "go-kart": {
+    "noun": "go-kart",
+    "syn": [],
+    "img": "go-kart",
+    "pal": [
+     "red",
+     "yellow",
+     "blue"
+    ],
+    "file": "go-kart"
+   },
+   "rat": {
+    "noun": "rat",
+    "syn": [],
+    "img": "rat",
+    "pal": [
+     "grey",
+     "pink"
+    ],
+    "file": "rat"
+   },
+   "plane": {
+    "noun": "plane",
+    "syn": [],
+    "img": "plane",
+    "pal": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "file": "plane"
+   },
+   "duck": {
+    "noun": "duck",
+    "syn": [],
+    "img": "duck",
+    "pal": [
+     "yellow",
+     "orange"
+    ],
+    "file": "duck"
+   },
+   "bike": {
+    "noun": "bike",
+    "syn": [],
+    "img": "bike",
+    "pal": [
+     "blue",
+     "green",
+     "white"
+    ],
+    "file": "bike"
+   },
+   "pencil": {
+    "noun": "pencil",
+    "syn": [],
+    "img": "pencil",
+    "pal": [
+     "yellow",
+     "pink"
+    ],
+    "file": "pencil"
+   },
+   "monster": {
+    "noun": "monster",
+    "syn": [],
+    "img": "monster",
+    "pal": [
+     "blue",
+     "green",
+     "yellow"
+    ],
+    "file": "monster"
+   },
+   "train": {
+    "noun": "train",
+    "syn": [],
+    "img": "train",
+    "pal": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "file": "train"
+   },
+   "rubber": {
+    "noun": "rubber",
+    "syn": [],
+    "img": "rubber",
+    "pal": [
+     "red",
+     "blue"
+    ],
+    "file": "rubber"
+   },
+   "computer-game": {
+    "noun": "computer game",
+    "syn": [],
+    "img": "computer-game",
+    "pal": [
+     "blue",
+     "green",
+     "red"
+    ],
+    "file": "computer-game"
+   },
+   "elephant": {
+    "noun": "elephant",
+    "syn": [],
+    "img": "elephant",
+    "pal": [
+     "grey",
+     "pink"
+    ],
+    "file": "elephant"
+   },
+   "kite": {
+    "noun": "kite",
+    "syn": [],
+    "img": "kite",
+    "pal": [
+     "blue",
+     "green",
+     "yellow",
+     "red"
+    ],
+    "file": "kite"
+   },
+   "dog": {
+    "noun": "dog",
+    "syn": [],
+    "img": "dog",
+    "pal": [
+     "orange",
+     "brown",
+     "white"
+    ],
+    "file": "dog"
+   },
+   "sandwich": {
+    "noun": "sandwich",
+    "syn": [],
+    "img": "sandwich",
+    "pal": [
+     "yellow",
+     "orange",
+     "green"
+    ],
+    "file": "sandwich"
+   },
+   "apple": {
+    "noun": "apple",
+    "syn": [],
+    "img": "apple",
+    "pal": [
+     "red"
+    ],
+    "file": "apple"
+   },
+   "banana": {
+    "noun": "banana",
+    "syn": [],
+    "img": "banana",
+    "pal": [
+     "yellow"
+    ],
+    "file": "banana"
+   },
+   "carrots": {
+    "noun": "carrot",
+    "syn": [
+     "carrots"
+    ],
+    "img": "carrots",
+    "pal": [
+     "orange",
+     "green"
+    ],
+    "file": "carrots"
+   },
+   "pizza": {
+    "noun": "pizza",
+    "syn": [],
+    "img": "pizza",
+    "pal": [
+     "yellow",
+     "red",
+     "orange"
+    ],
+    "file": "pizza"
+   },
+   "steak": {
+    "noun": "steak",
+    "syn": [],
+    "img": "steak",
+    "pal": [
+     "brown"
+    ],
+    "file": "steak"
+   },
+   "cake": {
+    "noun": "cake",
+    "syn": [],
+    "img": "cake",
+    "pal": [
+     "yellow",
+     "pink"
+    ],
+    "file": "cake"
+   },
+   "sausage": {
+    "noun": "sausage",
+    "syn": [],
+    "img": "sausage",
+    "pal": [
+     "orange"
+    ],
+    "file": "sausage"
+   },
+   "chicken": {
+    "noun": "chicken",
+    "syn": [],
+    "img": "chicken",
+    "pal": [
+     "orange"
+    ],
+    "file": "chicken"
+   },
+   "pen": {
+    "noun": "pen",
+    "syn": [],
+    "img": "pen",
+    "pal": [
+     "blue",
+     "red",
+     "pink"
+    ],
+    "file": "pen"
+   },
+   "chair": {
+    "noun": "chair",
+    "syn": [],
+    "img": "chair",
+    "pal": [
+     "red",
+     "blue"
+    ],
+    "file": "chair"
+   }
+  }
  }
 };

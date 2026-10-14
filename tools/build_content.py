@@ -295,7 +295,51 @@ TPN = {1: 'Requires support to achieve curriculum target (Working towards A1)', 
        3: 'Achieves expectations of curriculum target (Working towards A1)', 4: 'Working towards exceeding expectations (A1 Low)',
        5: 'On track to exceed expectations (A1 Low)', 6: 'Exceeds expectations (A1 Low)'}
 
-CONTENT = dict(units=UNITS, skills=SKILLS, stdTitles=STD_TITLES, tpDescriptors=TPD, tpNotes=TPN)
+# ---------------------------------------------------------------------------------------------------------------
+# "Write it" (handwriting): sentence frames from the teacher's own question documents.
+# Easy = copy, Medium = put jumbled words in order and write the sentence, Challenge = write your own sentence from the picture.
+# ---------------------------------------------------------------------------------------------------------------
+PAL = json.load(open(os.path.join(ROOT, 'tools', 'palettes.json'), encoding='utf8')) if os.path.exists(os.path.join(ROOT, 'tools', 'palettes.json')) else {}
+ITEM = {it['id']: it for u in UNITS for it in u['items']}
+def img_ok(key): return os.path.exists(os.path.join(ROOT, 'img', key + '.png'))
+NOUNS = {}
+def noun(key, text=None, syn=None, img=None):
+    """key = picture name. img=None -> same as key. A noun with no picture file yet is shown as a word until the picture arrives."""
+    if key in NOUNS: return key
+    en = text or (ITEM[key]['en'] if key in ITEM else key.replace('-', ' '))
+    NOUNS[key] = dict(noun=en, syn=syn or [], img=(img or key) if img_ok(img or key) else None, pal=PAL.get(img or key, []), file=(img or key))
+    return key
+def art(w): return 'an' if w[0] in 'aeiou' else 'a'
+
+WRITEIT = []
+POS = [('cat', 'desk', 'on'), ('spider', 'pencil-case', 'in'), ('ball', 'bag', 'under'), ('frog', 'book', 'on'), ('ruler', 'notebook', 'in'), ('lizard', 'car', 'under'),
+       ('doll', 'go-kart', 'on'), ('rat', 'desk', 'in'), ('plane', 'desk', 'under'), ('duck', 'bike', 'on'), ('pencil', 'bag', 'in'), ('monster', 'train', 'under'),
+       ('rubber', 'computer-game', 'on'), ('elephant', 'kite', 'under'), ('dog', 'car', 'in'), ('notebook', 'ruler', 'on'), ('spider', 'rubber', 'under'),
+       ('frog', 'notebook', 'in'), ('ball', 'elephant', 'on'), ('cat', 'doll', 'under')]
+for n, (a, b, prep) in enumerate(POS, 1):
+    noun(a); noun(b)
+    WRITEIT.append(dict(id='p%02d' % n, kind='pos', unit=3, a=a, b=b, prep=prep, scene='scene-%02d' % n,
+                        model='The %s is %s the %s.' % (NOUNS[a]['noun'], prep, NOUNS[b]['noun'])))
+HAVE = [('sandwich', 'cheese ', 'a'), ('apple', '', 'an'), ('banana', '', 'a'), ('carrots', '', 'a'), ('pizza', '', 'a'), ('pencil', '', 'a'), ('ruler', '', 'a'), ('doll', '', 'a'), ('monster', 'ugly ', 'an'), ('frog', '', 'a')]
+HAVENT = [('steak', 'a'), ('cake', 'a'), ('sausage', 'a'), ('chicken', 'a'), ('pen', 'a'), ('notebook', 'a'), ('pencil-case', 'a'), ('train', 'a'), ('bike', 'a'), ('elephant', 'an')]
+for n, (k, mod, ar) in enumerate(HAVE, 1):
+    if k == 'carrots': noun('carrots', 'carrot', syn=['carrots'])
+    else: noun(k)
+    WRITEIT.append(dict(id='h%02d' % n, kind='have', unit=4, x=k, model='I have got %s %s%s.' % (ar, mod, NOUNS[k]['noun'])))
+for n, (k, ar) in enumerate(HAVENT, 1):
+    noun(k)
+    WRITEIT.append(dict(id='n%02d' % n, kind='havent', unit=4, x=k, model="I haven't got %s %s." % (ar, NOUNS[k]['noun'])))
+for k in ['pen', 'pencil', 'ruler', 'rubber', 'bag', 'book', 'desk', 'chair', 'pencil-case']:
+    noun(k); WRITEIT.append(dict(id='i_' + k, kind='its', unit=1, x=k, model="It's %s %s." % (art(NOUNS[k]['noun']), NOUNS[k]['noun'])))
+for k in ['kite', 'doll', 'monster', 'plane', 'ball', 'bike', 'go-kart', 'computer-game', 'train', 'car']:
+    noun(k); WRITEIT.append(dict(id='i_' + k, kind='its', unit=2, x=k, model="It's %s %s." % (art(NOUNS[k]['noun']), NOUNS[k]['noun'])))
+for k in ['elephant', 'rat', 'lizard', 'frog', 'spider', 'duck', 'dog', 'cat']:
+    noun(k); WRITEIT.append(dict(id='i_' + k, kind='its', unit=3, x=k, model="It's %s %s." % (art(NOUNS[k]['noun']), NOUNS[k]['noun'])))
+missing_pics = sorted({v['file'] for v in NOUNS.values() if not v['img']})
+print('write-it frames', len(WRITEIT), '| nouns', len(NOUNS), '| pictures still to come:', missing_pics)
+SKILLS.append(dict(id='writeit', label='Write it', dskp='Writing', std=['4.1.2', '4.2.1', '4.2.4', '4.3.1', '4.3.2']))
+
+CONTENT = dict(units=UNITS, skills=SKILLS, stdTitles=STD_TITLES, tpDescriptors=TPD, tpNotes=TPN, writeit=dict(frames=WRITEIT, nouns=NOUNS))
 with open(os.path.join(ROOT, 'data.js'), 'w', encoding='utf-8') as f:
     f.write('window.CONTENT = ' + json.dumps(CONTENT, ensure_ascii=False, indent=1) + ';\n')
 n_items = sum(len(u['items']) for u in UNITS)

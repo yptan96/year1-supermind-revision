@@ -161,6 +161,37 @@ textarea.cm{width:260px;min-height:56px;border:2px solid #C9CBE0;border-radius:1
 .toast-message{position:fixed;top:20px;right:20px;background:var(--green);color:#fff;padding:14px 22px;border-radius:14px;font-weight:800;z-index:10001;box-shadow:0 8px 16px rgba(0,0,0,.25);animation:slideInRight .3s ease}
 .toast-message.error{background:var(--red)}
 @keyframes slideInRight{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ---------- Write it ---------- */
+.wi-lab{display:inline-block;background:#E5DBFF;border-radius:12px;padding:8px 14px;font-weight:800;font-size:22px}
+.wi-chips{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:4px 0 8px}
+.wi-chip{background:#FFD43B;border-radius:14px;padding:8px 16px;font-family:'Fredoka',sans-serif;font-size:28px;font-weight:600}
+.wi-dash{font-size:28px;font-weight:800}
+.wi-one{max-height:150px}
+.wi-mark{position:absolute;right:14px;top:8px;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:#fff}
+.wi-mark.yes{background:#2F9E44}.wi-mark.no{background:#C92A2A}
+.scene{width:100%;display:flex;justify-content:center}
+.scene-real{max-width:100%;max-height:200px;object-fit:contain}
+.sc{position:relative;width:100%;max-width:300px;height:200px}
+.sc img{max-width:100%;max-height:100%;object-fit:contain}
+.sc .sc-a,.sc .sc-b{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center}
+.sc-on .sc-b{bottom:0;width:70%;height:98px}
+.sc-on .sc-a{bottom:96px;width:44%;height:84px}
+.sc-in .sc-b{bottom:0;width:78%;height:150px}
+.sc-in .sc-a{bottom:30px;width:34%;height:66px;z-index:2}
+.sc-under .sc-b{top:0;width:70%;height:100px;z-index:2}
+.sc-under .sc-a{bottom:0;width:44%;height:90px;z-index:1}
+.cmp{font-size:24px;font-weight:800;margin:6px 0;word-wrap:break-word}
+.cmp small{display:block;font-size:14px;color:#4A4A6A;font-weight:800}
+.bad{background:#FFE3E3;color:#C92A2A;border-radius:6px;padding:0 4px}
+.good{color:#2B8A3E}
+.fixh{font-size:22px;margin:10px 0 0}
+ul.fix{margin:6px 0 0;padding-left:22px}
+ul.fix li{font-size:20px;font-weight:800;margin:6px 0}
+.ok{font-family:'Fredoka',sans-serif;font-size:28px;color:#2B8A3E;margin-top:6px}
+.star{font-size:20px;font-weight:800;background:#FFF3BF;border-radius:12px;padding:8px 12px;margin-top:8px}
+.note2{font-size:16px;font-weight:700;color:#4A4A6A;margin-top:8px}
+#wiRes{margin-top:8px}
 </style>
 </head>
 <body>
@@ -202,6 +233,9 @@ textarea.cm{width:260px;min-height:56px;border:2px solid #C9CBE0;border-radius:1
 </div>
 
 <script src="data.js"></script>
+<script src="check.js"></script>
+<script src="recognize.js"></script>
+<script src="writepad.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

@@ -6,27 +6,18 @@
 <title>Write test</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#26264A;--cream:#FFF7E8;--blue:#3B5BDB;--green:#2F9E44;--red:#C92A2A}
+:root{--ink:#26264A;--cream:#FFF7E8;--green:#2F9E44;--red:#C92A2A}
 *{box-sizing:border-box}
 html,body{overscroll-behavior:none}
-body{margin:0;background:var(--cream);color:var(--ink);font-family:'Nunito',system-ui,sans-serif;font-size:18px;line-height:1.35;-webkit-user-select:none;user-select:none}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:'Nunito',system-ui,sans-serif;font-size:18px;line-height:1.35}
 .wrap{max-width:720px;margin:0 auto;padding:16px}
 h1,h2{font-family:'Fredoka',sans-serif;font-weight:600;margin:0 0 8px}
 h1{font-size:28px}h2{font-size:22px}
 .card{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:16px;margin:0 0 16px}
 .note{font-size:15px;color:#4A4A6A;font-weight:700}
 .target{font-family:'Fredoka',sans-serif;font-size:32px;font-weight:600;line-height:1.2}
-label{display:block;font-weight:800;margin:12px 0 6px}
-.tools{display:flex;gap:6px;flex-wrap:nowrap;margin-top:12px}
-.tools button{flex:1 1 0;min-width:0;justify-content:center;padding:0 4px;font-size:16px;gap:4px}
-.bk{position:absolute;right:6px;bottom:6px;min-height:44px !important;padding:0 10px !important;border-radius:12px !important}
-.answer{position:relative;min-height:106px;border:3px solid var(--ink);border-radius:14px;background:#fff;padding:4px 10px}
-.answer textarea{width:calc(100% - 56px);height:96px;border:0;outline:0;background:transparent;font-family:'Nunito',sans-serif;font-size:26px;font-weight:700;resize:none;color:var(--ink);-webkit-user-select:text;user-select:text}
-.status{font-size:14px;font-weight:800;color:#4A4A6A;min-height:20px;margin-top:6px}
-button{min-height:52px;border-radius:16px;border:3px solid var(--ink);background:#fff;font:800 18px 'Nunito',sans-serif;padding:0 18px;cursor:pointer;color:var(--ink);display:inline-flex;align-items:center;gap:8px}
-button.on{background:#FFD43B}
-button:disabled{opacity:.5}
-.go{background:var(--green);border-color:var(--green);color:#fff;font-family:'Fredoka',sans-serif;font-size:24px;font-weight:600}
+button.b{min-height:52px;border-radius:16px;border:3px solid var(--ink);background:#fff;font:800 18px 'Nunito',sans-serif;padding:0 18px;cursor:pointer;color:var(--ink)}
+.go{background:var(--green) !important;border-color:var(--green) !important;color:#fff !important;font-family:'Fredoka',sans-serif !important;font-size:24px !important;font-weight:600 !important}
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .cmp{font-size:24px;font-weight:800;margin:6px 0;word-wrap:break-word}
 .cmp small{display:block;font-size:14px;color:#4A4A6A;font-weight:800}
@@ -35,7 +26,6 @@ button:disabled{opacity:.5}
 ul.fix{margin:6px 0 0;padding-left:22px}
 ul.fix li{font-size:20px;font-weight:800;margin:6px 0}
 .ok{font-family:'Fredoka',sans-serif;font-size:28px;color:#2B8A3E}
-#pad{width:100%;height:240px;border:3px solid var(--ink);border-radius:14px;touch-action:none;display:block;background:#fff}
 pre.dbg{white-space:pre-wrap;font-size:13px;background:#EFE8D6;border-radius:10px;padding:8px;user-select:text;-webkit-user-select:text}
 </style>
 </head>
@@ -43,38 +33,19 @@ pre.dbg{white-space:pre-wrap;font-size:13px;background:#EFE8D6;border-radius:10p
 <div class="wrap">
 <h1>Write test</h1>
 <p class="note">For Ms Tan. Nothing is saved.</p>
-
 <div class="card">
  <p class="note">Copy this sentence.</p>
  <div class="target" id="target"></div>
-
- <label for="ans">Write here.</label>
- <div class="answer"><textarea id="ans" lang="en" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" aria-label="Your answer. Write on the pad below, or type here."></textarea>
-  <button id="back" class="bk" aria-label="Delete the last letter"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#26264A" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M21 5H9l-6 7 6 7h12z"/><path d="m13 9 5 6M18 9l-5 6"/></svg></button></div>
- <div class="status" id="status" aria-live="polite">Getting ready...</div>
-
- <label>Write on the pad. Wait, or tap Add. Tap Space between words.</label>
- <canvas id="pad" aria-label="Writing pad"></canvas>
-
- <div class="tools">
-  <button id="add">Add</button>
-  <button id="space">Space</button>
-  <button id="rubber" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#26264A" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M7 21h12"/><path d="M5.5 14.5 14 6a2.1 2.1 0 0 1 3 0l2 2a2.1 2.1 0 0 1 0 3L11 19.5H8L5.5 17a1.8 1.8 0 0 1 0-2.5z"/></svg>Rubber</button>
-  <button id="clear">Clear</button>
- </div>
- <div class="row">
-  <button class="go" id="check">Check</button>
-  <button id="next">Next sentence</button>
- </div>
-
+ <div id="pad"></div>
+ <div class="row"><button class="b go" id="check">Check</button><button class="b" id="next">Next sentence</button></div>
  <div id="result" aria-live="polite"></div>
  <pre class="dbg" id="dbg" hidden></pre>
 </div>
 </div>
-
 <script src="data.js"></script>
 <script src="check.js"></script>
 <script src="recognize.js"></script>
+<script src="writepad.js"></script>
 <script>
 const DEBUG = /[?&]debug/.test(location.search);
 const S = [
@@ -83,92 +54,22 @@ const S = [
  'The plane is under the desk.','The duck is on the bike.','I have got a cheese sandwich.','I haven’t got a steak.',
  'Is it a pen?','The tiger hides in the tall grass.'
 ];
-let i = 0;
+let i = 0, pad = null;
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-
-// words the app knows (only used to tell I from l)
 const LEX = new Set();
 (window.CONTENT ? window.CONTENT.units : []).forEach(u => { u.items.forEach(it => String(it.en).toLowerCase().split(/\s+/).forEach(w => LEX.add(w.replace(/[^a-z']/g, '')))); u.sentences.forEach(s => s.en.toLowerCase().split(/\s+/).forEach(w => LEX.add(w.replace(/[^a-z']/g, '')))); });
 S.forEach(s => s.toLowerCase().replace(/’/g, "'").split(/\s+/).forEach(w => LEX.add(w.replace(/[^a-z']/g, ''))));
-
-/* ---------- the writing pad: pen strokes are kept as lines so the rubber can remove whole strokes ---------- */
-const pad = $('pad'), px = pad.getContext('2d');
-let strokes = [], cur = null, erasing = false, timer = null, W = 300, H = 240;
-function fit() {
-  const r = pad.getBoundingClientRect(), d = window.devicePixelRatio || 1;
-  W = r.width; H = r.height; pad.width = Math.round(W * d); pad.height = Math.round(H * d); px.setTransform(d, 0, 0, d, 0, 0);
-  redraw();
+function debug(r, n, W, H) {
+  if (!DEBUG) return; $('dbg').hidden = false;
+  $('dbg').textContent = 'read: "' + r.text + '"  (xh ' + Math.round(r.xh) + ', base ' + Math.round(r.base) + ', pad ' + Math.round(W) + 'x' + Math.round(H) + ', strokes ' + n + ')\n' +
+    r.chars.map(c => c.ch === ' ' ? '[space]' : c.ch + ' ' + Math.round(c.conf * 100) + '% (' + c.alt.map(a => a[0] + ' ' + Math.round(a[1] * 100)).join(', ') + ') h=' + (c.box ? Math.round(c.box.h) : '-')).join('\n');
 }
-function redraw() {
-  px.clearRect(0, 0, W, H);
-  px.lineWidth = 1.5; px.strokeStyle = '#B7D6F5'; px.setLineDash([6, 6]);
-  [.25, .5].forEach(f => { px.beginPath(); px.moveTo(8, H * f); px.lineTo(W - 8, H * f); px.stroke(); });
-  px.setLineDash([]); px.lineWidth = 2.5; px.strokeStyle = '#7FB2EA';
-  px.beginPath(); px.moveTo(8, H * .75); px.lineTo(W - 8, H * .75); px.stroke();
-  px.lineCap = 'round'; px.lineJoin = 'round'; px.lineWidth = 7; px.strokeStyle = '#26264A';
-  strokes.concat(cur ? [cur] : []).forEach(s => { px.beginPath(); s.forEach(([x, y], k) => k ? px.lineTo(x, y) : px.moveTo(x, y)); if (s.length === 1) px.lineTo(s[0][0] + .1, s[0][1]); px.stroke(); });
-}
-window.addEventListener('resize', fit); fit();
-const pt = e => { const r = pad.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-// stop the page scrolling while writing
-['touchstart', 'touchmove', 'touchend'].forEach(t => pad.addEventListener(t, e => e.preventDefault(), { passive: false }));
-pad.addEventListener('pointerdown', e => {
-  e.preventDefault(); clearTimeout(timer); pad.setPointerCapture(e.pointerId);
-  if (erasing) { cur = null; eraseAt(pt(e)); pad._down = true; return; }
-  cur = [pt(e)]; pad._down = true; redraw();
-});
-pad.addEventListener('pointermove', e => {
-  if (!pad._down) return;
-  if (erasing) { eraseAt(pt(e)); return; }
-  if (cur) { cur.push(pt(e)); redraw(); }
-});
-function endStroke() {
-  if (!pad._down) return; pad._down = false;
-  if (cur) { strokes.push(cur); cur = null; redraw(); }
-  if (strokes.length) { setStatus('Wait... or tap Add.'); timer = setTimeout(commit, 1800); }
-}
-['pointerup', 'pointercancel'].forEach(t => pad.addEventListener(t, endStroke));
-function eraseAt([x, y]) {
-  const before = strokes.length;
-  strokes = strokes.filter(s => !s.some(([a, b]) => Math.hypot(a - x, b - y) < 22));
-  if (strokes.length !== before) redraw();
-}
-
-/* ---------- reading the writing ---------- */
-function setStatus(t) { $('status').textContent = t; }
-function commit() {
-  clearTimeout(timer);
-  if (!strokes.length) return;
-  if (!Recognizer.ready()) { setStatus('Still getting ready. Try again in a moment.'); return; }
-  const r = Recognizer.read(strokes, W, H, { lexicon: LEX, noSpaces: true });
-  if (DEBUG) {
-    $('dbg').hidden = false;
-    $('dbg').textContent = 'read: "' + r.text + '"  (xh ' + Math.round(r.xh) + ', base ' + Math.round(r.base) + ', pad ' + Math.round(W) + 'x' + Math.round(H) + ', strokes ' + strokes.length + ')\n' +
-      r.chars.map(c => c.ch === ' ' ? '[space]' : c.ch + ' ' + Math.round(c.conf * 100) + '% (' + c.alt.map(a => a[0] + ' ' + Math.round(a[1] * 100)).join(', ') + ') h=' + (c.box ? Math.round(c.box.h) : '-')).join('\n') +
-      '\nstrokes: ' + JSON.stringify(strokes.map(s => s.length + 'pts'));
-  }
-  if (r.text) {
-    // no automatic spaces: the pupil taps Space. A lone I after a letter is an l (as in ball).
-    const a = $('ans'); let t = r.text;
-    if (t === 'I' && /[A-Za-z]$/.test(a.value)) t = 'l';
-    a.value += t;
-    setStatus('Added: ' + t);
-  } else setStatus('I could not read that. Try again.');
-  strokes = []; cur = null; redraw();
-}
-$('add').onclick = commit;
-$('space').onclick = () => { if (strokes.length) commit(); const a = $('ans'); if (a.value && !/\s$/.test(a.value)) a.value += ' '; setStatus('Space added.'); };
-$('back').onclick = () => { if (strokes.length) { strokes = []; redraw(); clearTimeout(timer); setStatus('Ready.'); return; } const a = $('ans'); a.value = a.value.slice(0, -1); };
-$('rubber').onclick = () => { erasing = !erasing; $('rubber').classList.toggle('on', erasing); $('rubber').setAttribute('aria-pressed', erasing); clearTimeout(timer); if (!erasing && strokes.length) timer = setTimeout(commit, 1800); };
-function clearAll() { clearTimeout(timer); strokes = []; cur = null; redraw(); $('ans').value = ''; $('result').innerHTML = ''; }
-$('clear').onclick = () => { clearAll(); setStatus(Recognizer.ready() ? 'Ready.' : 'Getting ready...'); };
+function show() { $('target').textContent = S[i]; $('result').innerHTML = ''; if (pad) pad.destroy(); pad = WritePad.mount($('pad'), { lexicon: LEX, debug }); }
 $('next').onclick = () => { i = (i + 1) % S.length; show(); };
-function show() { $('target').textContent = S[i]; clearAll(); setStatus(Recognizer.ready() ? 'Ready.' : 'Getting ready...'); }
-
 $('check').onclick = () => {
-  if (strokes.length) commit();
-  const exp = S[i].replace('’', "'"), act = $('ans').value.replace(/’/g, "'");
+  pad.flush();
+  const exp = S[i].replace('’', "'"), act = pad.getText().replace(/’/g, "'");
   const r = checkAnswer(exp, act);
   const my = r.my.map(w => w.bad ? '<span class="bad">' + esc(w.text) + '</span>' : esc(w.text)).join(' ');
   let h = '<div class="cmp"><small>Teacher’s answer</small><span class="good">' + esc(S[i]) + '</span></div>' +
@@ -177,9 +78,7 @@ $('check').onclick = () => {
   else h += '<h2 style="margin-top:10px">What should I correct?</h2><ul class="fix">' + r.issues.map(x => '<li>' + esc(x.say) + '</li>').join('') + '</ul>';
   $('result').innerHTML = h;
 };
-
 show();
-Recognizer.load('models/letters.json').then(() => setStatus('Ready. Write one word on the pad.')).catch(() => setStatus('Could not load the handwriting reader. You can still type.'));
 </script>
 </body>
 </html>

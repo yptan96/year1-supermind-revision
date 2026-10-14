@@ -1,0 +1,462 @@
+{
+"apple": [
+"red"
+],
+"bag": [
+"blue",
+"green",
+"red",
+"orange"
+],
+"ball": [
+"blue",
+"green",
+"red",
+"yellow"
+],
+"banana": [
+"yellow"
+],
+"beautiful": [
+"yellow",
+"red",
+"orange"
+],
+"big": [
+"red",
+"blue"
+],
+"bike": [
+"blue",
+"green",
+"white"
+],
+"blue": [
+"blue"
+],
+"book": [
+"blue",
+"red"
+],
+"boy": [
+"orange",
+"yellow",
+"brown",
+"blue"
+],
+"broccoli": [
+"green",
+"blue"
+],
+"butterfly": [
+"red",
+"purple",
+"yellow",
+"pink",
+"blue"
+],
+"cake": [
+"yellow",
+"pink"
+],
+"car": [
+"red",
+"blue",
+"yellow"
+],
+"carrots": [
+"orange",
+"green"
+],
+"cat": [
+"orange",
+"white"
+],
+"catch": [
+"blue",
+"orange",
+"yellow",
+"red",
+"black"
+],
+"chair": [
+"red",
+"blue"
+],
+"cheese": [
+"yellow",
+"orange"
+],
+"chicken": [
+"orange"
+],
+"circle": [
+"yellow"
+],
+"coconut": [
+"white",
+"brown"
+],
+"computer-game": [
+"blue",
+"green",
+"red"
+],
+"corn": [
+"green",
+"yellow",
+"black"
+],
+"crocodile": [
+"green",
+"yellow"
+],
+"cut-out": [
+"blue",
+"orange",
+"black",
+"yellow"
+],
+"desk": [
+"yellow",
+"red",
+"orange",
+"blue",
+"green"
+],
+"dog": [
+"orange",
+"brown",
+"white"
+],
+"doll": [
+"pink",
+"orange",
+"brown"
+],
+"duck": [
+"yellow",
+"orange"
+],
+"elephant": [
+"grey",
+"pink"
+],
+"eyes": [
+"white",
+"blue"
+],
+"face": [
+"orange",
+"brown"
+],
+"fold": [
+"blue",
+"black",
+"yellow",
+"orange"
+],
+"frog": [
+"green"
+],
+"giraffe": [
+"yellow",
+"orange",
+"black"
+],
+"girl": [
+"pink",
+"orange",
+"brown"
+],
+"glue": [
+"yellow",
+"blue",
+"orange",
+"black"
+],
+"go-kart": [
+"red",
+"yellow",
+"blue"
+],
+"grass": [
+"green",
+"black"
+],
+"green-beans": [
+"green",
+"blue"
+],
+"green": [
+"green"
+],
+"ground": [
+"brown"
+],
+"hat": [
+"yellow",
+"red"
+],
+"hot-dog": [
+"orange",
+"yellow"
+],
+"in": [
+"orange"
+],
+"juice": [
+"orange",
+"white",
+"yellow"
+],
+"kitchen": [
+"white",
+"grey",
+"blue"
+],
+"kite": [
+"blue",
+"green",
+"yellow",
+"red"
+],
+"leaf": [
+"green",
+"black"
+],
+"lizard": [
+"green",
+"yellow"
+],
+"long": [
+"yellow"
+],
+"look": [
+"grey",
+"blue"
+],
+"mask": [
+"white"
+],
+"milk": [
+"white"
+],
+"monster": [
+"blue",
+"green",
+"yellow"
+],
+"mushroom": [
+"white",
+"blue"
+],
+"new": [
+"orange"
+],
+"nose": [
+"orange"
+],
+"old": [
+"orange",
+"brown"
+],
+"on": [
+"orange",
+"white"
+],
+"onion": [
+"yellow",
+"orange"
+],
+"open-bag": [
+"red",
+"blue",
+"orange",
+"black"
+],
+"orange-colour": [
+"orange"
+],
+"orange": [
+"orange"
+],
+"paper-plate": [
+"white"
+],
+"parallelogram": [
+"purple"
+],
+"peach": [
+"orange",
+"red",
+"black"
+],
+"pear": [
+"green",
+"black"
+],
+"peas": [
+"green"
+],
+"pen": [
+"blue",
+"red",
+"pink"
+],
+"pencil-case": [
+"blue",
+"green"
+],
+"pencil": [
+"yellow",
+"pink"
+],
+"pet-show": [
+"orange",
+"black",
+"blue"
+],
+"pineapple": [
+"yellow",
+"orange",
+"green",
+"black"
+],
+"pizza": [
+"yellow",
+"red",
+"orange"
+],
+"plane": [
+"blue",
+"red",
+"yellow"
+],
+"potato": [
+"orange"
+],
+"purple": [
+"purple",
+"blue"
+],
+"put-away-book": [
+"blue",
+"red",
+"orange",
+"black",
+"yellow"
+],
+"rat": [
+"grey",
+"pink"
+],
+"rectangle": [
+"orange"
+],
+"red": [
+"red"
+],
+"rubber": [
+"red",
+"blue"
+],
+"ruler": [
+"green"
+],
+"sandwich": [
+"yellow",
+"orange",
+"green"
+],
+"sausage": [
+"orange"
+],
+"short": [
+"yellow",
+"orange",
+"red"
+],
+"sit": [
+"yellow",
+"blue",
+"orange",
+"black"
+],
+"small": [
+"yellow",
+"red"
+],
+"snake": [
+"green",
+"yellow",
+"black"
+],
+"spider": [
+"black"
+],
+"square": [
+"green"
+],
+"stand": [
+"blue",
+"yellow",
+"orange"
+],
+"steak": [
+"brown"
+],
+"strawberry": [
+"red",
+"green"
+],
+"stretch": [
+"blue",
+"yellow",
+"orange"
+],
+"tangram": [
+"orange",
+"green",
+"blue",
+"red",
+"yellow"
+],
+"tiger": [
+"orange",
+"black",
+"grey"
+],
+"tomato": [
+"red",
+"black"
+],
+"train": [
+"blue",
+"red",
+"yellow"
+],
+"triangle": [
+"red"
+],
+"turn-around": [
+"blue",
+"yellow",
+"orange",
+"brown"
+],
+"ugly": [
+"blue"
+],
+"under": [
+"orange",
+"brown",
+"white"
+],
+"white": [
+"white"
+],
+"yellow": [
+"yellow"
+]
+}

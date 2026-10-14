@@ -15,6 +15,8 @@ const SESSION_KEY = 'eduAppSession_v1';
 const SESSION_MAX_AGE_MS = 3 * 60 * 60 * 1000; // 3 hours
 const LOCAL_KEY = 'eduResultsLocal_v1';
 const ROUND = 10; // fixed round size: every percentage divides by this (or by pair count for Words)
+const ROUND_W = 5; // Write it: five written answers per round (always divide by 5)
+const totalOf = g => g.skill === 'words' ? g.mem.pairs : (g.skill === 'writeit' ? ROUND_W : ROUND);
 const LEVEL_NAME = ['Easy', 'Medium', 'Hard'];
 const MIX_BG = '#E5DBFF';
 
@@ -173,6 +175,7 @@ function buildQs(skill, us, level) {
       return { k: 'letter', id: it.id, mode, pos, ans, opts: shuffle([ans, ...otherLetters([ans], n - 1)]) };
     });
   }
+  if (skill === 'writeit') return buildWriteIt(us, level);
   if (skill === 'speak') {
     const items = itemsOf(us), sents = sentsOf(us);
     if (level === 1) return sample(items, ROUND).map(it => ({ k: 'say', ref: 'i', id: it.id }));
@@ -181,7 +184,34 @@ function buildQs(skill, us, level) {
   }
   return [];
 }
-const newSt = () => ({ placed: [], wrongs: [], solved: false, tried: false, flash: false, shakeTile: -1, heard: false, said: false, lang: '' });
+const newSt = () => ({ placed: [], wrongs: [], solved: false, tried: false, flash: false, shakeTile: -1, heard: false, said: false, lang: '', answer: '', attempts: 0, flagged: false });
+
+/* ---------- Write it (handwriting): Easy = copy, Medium = put the words in order and write, Challenge = write your own sentence ---------- */
+const WI = C.writeit || { frames: [], nouns: {} };
+const frameById = {}; WI.frames.forEach(f => { frameById[f.id] = f; });
+const nounObj = k => { const n = WI.nouns[k] || { noun: String(k).replace(/-/g, ' '), syn: [], pal: [] }; return { noun: n.noun, syn: n.syn || [], pal: n.pal || [] }; };
+function frameForCheck(f) { return { kind: f.kind, a: f.a && nounObj(f.a), b: f.b && nounObj(f.b), x: f.x && nounObj(f.x), prep: f.prep }; }
+const LEX = new Set(); // every word the app knows (used to tell I from l, and to accept words like cheese)
+UNITS.forEach(u => { u.items.forEach(i => String(i.en).toLowerCase().split(/\s+/).forEach(w => LEX.add(w.replace(/[^a-z']/g, '')))); u.sentences.forEach(s => s.en.toLowerCase().replace(/’/g, "'").split(/\s+/).forEach(w => LEX.add(w.replace(/[^a-z']/g, '')))); });
+WI.frames.forEach(f => f.model.toLowerCase().split(/\s+/).forEach(w => LEX.add(w.replace(/[^a-z']/g, ''))));
+function buildWriteIt(us, level) {
+  const frames = WI.frames.filter(f => us.includes(f.unit));
+  const models = frames.map(f => ({ model: f.model, fid: f.id })).concat(sentsOf(us).filter(s => tokens(s).length >= 3 && !/\?$/.test(s.en)).map(s => ({ model: s.en, sid: s.id })));
+  if (level === 1) {
+    const words = sample(itemsOf(us).filter(i => i.spell && i.kind !== 'number'), 3).map(it => ({ k: 'wi', m: 'copyw', id: it.id, model: it.en }));
+    const sents = sample(models.length ? models : WI.frames.map(f => ({ model: f.model, fid: f.id })), 2).map(m => Object.assign({ k: 'wi', m: 'copys' }, m));
+    return words.concat(sents);
+  }
+  if (level === 2) {
+    return sample(models.length ? models : WI.frames.map(f => ({ model: f.model, fid: f.id })), ROUND_W).map(m => {
+      const w = m.model.replace(/[.?!]+$/, '').split(' ').map(x => x.toLowerCase());
+      let sh = shuffle(w), tries = 0; while (sh.join(' ') === w.join(' ') && tries++ < 8) sh = shuffle(w);
+      return Object.assign({ k: 'wi', m: 'order', chips: sh }, m);
+    });
+  }
+  const pool = frames.length >= 3 ? frames : WI.frames; // units without picture sentences borrow from the others
+  return sample(pool, ROUND_W).map(f => ({ k: 'wi', m: 'guided', fid: f.id, model: f.model, borrowed: frames.length < 3 }));
+}
 
 function startGame() {
   const us = sel.units.slice().sort((a, b) => a - b);
@@ -218,7 +248,7 @@ function autoplay() {
 function finishGame() {
   let score, total;
   if (G.skill === 'words') { total = G.mem.pairs; score = Math.max(0, total - G.mem.mism.length); }
-  else { total = ROUND; score = G.res.filter(x => x === 1).length; }
+  else { total = totalOf(G); score = G.res.filter(x => x === 1).length; }
   const key = G.units.length === 1 ? 'u' + G.units[0] : 'mix';
   const rec = {
     name: currentStudent.name, className: currentStudent.className,
@@ -237,11 +267,18 @@ function unitTag() {
   if (G.units.length === 1) { const u = UNITS[G.units[0]]; return '<span class="gtag" style="background:' + u.bg + '">' + u.short + ' ' + esc(u.name) + '</span>'; }
   return '<span class="gtag" style="background:' + MIX_BG + '">' + (G.units.length === 5 ? 'All units' : G.units.map(u => 'Unit ' + u).join(', ')) + '</span>';
 }
+let wiPad = null;
+function mountWriteIt() {
+  if (wiPad) { wiPad.destroy(); wiPad = null; }
+  const host = $('wiPad'); if (!host || !window.WritePad) return;
+  wiPad = WritePad.mount(host, { lexicon: LEX, text: G.st.answer || '', onChange: t => { G.st.answer = t; saveSession(); } });
+}
 function render() {
   const stage = $('stage'); if (!stage) return;
+  if (wiPad) { wiPad.destroy(); wiPad = null; }
   ['homeBtn', 'studentViewBtn', 'teacherViewBtn'].forEach(id => $(id).classList.remove('on'));
   if (view === 'home') { $('homeBtn').classList.add('on'); stage.innerHTML = renderHome(); }
-  else if (view === 'game') stage.innerHTML = renderGame();
+  else if (view === 'game') { stage.innerHTML = renderGame(); if (G && G.skill === 'writeit') mountWriteIt(); }
   else if (view === 'result') stage.innerHTML = renderResult();
   else if (view === 'student') { $('studentViewBtn').classList.add('on'); renderStudent(); }
   else if (view === 'teacher') { $('teacherViewBtn').classList.add('on'); renderTeacher(); }
@@ -252,7 +289,11 @@ function renderHome() {
   const units = UNITS.map(u => '<button class="unit-btn' + (sel.units.includes(u.id) && !all ? ' on' : (all ? ' on' : '')) + '" style="background:' + u.bg + '" data-act="unit" data-u="' + u.id + '" aria-pressed="' + sel.units.includes(u.id) + '">' +
     '<span class="u1">' + u.short + '</span><span>' + esc(u.name) + '</span><span class="u3">' + esc(u.sub) + '</span></button>').join('') +
     '<button class="unit-btn' + (all ? ' on' : '') + '" style="background:' + MIX_BG + '" data-act="unit" data-u="all"><span class="u1">All</span><span>All Units</span><span class="u3">Unit 0 to 4</span></button>';
-  const skills = SKILLS.map(s => '<button class="skill-btn' + (sel.skill === s.id ? ' on' : '') + '" data-act="skill" data-s="' + s.id + '">' + s.label + '</button>').join('');
+  const isWrite = sel.skill === 'write' || sel.skill === 'writeit';
+  const skills = SKILLS.filter(s => s.id !== 'writeit').map(s => '<button class="skill-btn' + (sel.skill === s.id || (s.id === 'write' && isWrite) ? ' on' : '') + '" data-act="skill" data-from-top="1" data-s="' + s.id + '">' + s.label + '</button>').join('') +
+    (isWrite ? '</div><p class="label" style="margin-top:12px">Which writing game?</p><div class="skills">' +
+      '<button class="skill-btn' + (sel.skill === 'write' ? ' on' : '') + '" data-act="skill" data-s="write">Spell it (tap letters)</button>' +
+      '<button class="skill-btn' + (sel.skill === 'writeit' ? ' on' : '') + '" data-act="skill" data-s="writeit">Write it (with your finger)</button>' : '');
   const levels = [1, 2, 3].map(l => '<button class="level-btn' + (sel.level === l ? ' on' : '') + '" data-act="level" data-l="' + l + '">' + '&#9733;'.repeat(l) + ' Star ' + l + '<small>' + LEVEL_NAME[l - 1] + '</small></button>').join('');
   const names = sel.units.slice().sort((a, b) => a - b).map(i => 'Unit ' + i + ' ' + UNITS[i].name).join(', ');
   return '<div class="home"><h2>What do you want to play today?</h2>' +
@@ -271,7 +312,7 @@ const PROMPTS = {
 
 function renderGame() {
   const g = G, sk = SKILL[g.skill];
-  const total = g.skill === 'words' ? g.mem.pairs : ROUND;
+  const total = totalOf(g);
   const done = g.skill === 'words' ? g.mem.cards.filter(c => c.done).length / 2 : g.idx + (g.st.solved || g.st.said ? 1 : 0);
   const head = '<div class="gbar">' + unitTag() + '<span class="gtag" style="background:#fff;border:2px solid var(--ink)">' + sk.label + ' &middot; Star ' + g.level + '</span>' +
     '<div class="progress"><div style="width:' + Math.round(done / total * 100) + '%"></div></div>' +
@@ -286,7 +327,66 @@ function renderGame() {
   else if (q.k === 'order') body = bodyOrder(q, st);
   else if (q.k === 'letter') body = bodyLetter(q, st);
   else if (q.k === 'say') body = bodySay(q, st);
+  else if (q.k === 'wi') body = bodyWriteIt(q, st);
   return head + body;
+}
+
+/* ---------- Write it screen ---------- */
+function picNoun(key, cls) {
+  const n = WI.nouns[key] || { noun: key, img: null };
+  if (!n.img) return '<span class="wi-lab">' + esc(n.noun) + '</span>';
+  return '<img class="' + (cls || '') + '" src="img/' + n.img + '.png" alt="' + esc(n.noun) + '" data-lab="' + esc(n.noun) + '" onerror="window.__nopic(this)">';
+}
+window.__nopic = function (img) { const s = document.createElement('span'); s.className = 'wi-lab'; s.textContent = img.dataset.lab || img.alt || ''; img.replaceWith(s); };
+function sceneHtml(f) {
+  return '<div class="scene"><img class="scene-real" src="img/' + f.scene + '.png" alt="" data-a="' + esc(f.a) + '" data-b="' + esc(f.b) + '" data-prep="' + f.prep + '" onerror="window.__scene(this)"></div>';
+}
+window.__scene = function (img) { // no scene picture yet: build one from the two object pictures
+  const a = img.dataset.a, b = img.dataset.b, p = img.dataset.prep;
+  img.outerHTML = '<div class="sc sc-' + p + '"><div class="sc-b">' + picNoun(b) + '</div><div class="sc-a">' + picNoun(a) + '</div></div>';
+};
+function wiPicture(q) {
+  if (q.m === 'copyw') return '<div class="bigpic">' + pic(itemById[q.id]) + '</div>';
+  const f = q.fid ? frameById[q.fid] : null, s = q.sid ? sentById[q.sid] : null;
+  if (f && f.kind === 'pos') return '<div class="bigpic">' + sceneHtml(f) + '</div>';
+  if (f) return '<div class="bigpic" style="position:relative">' + picNoun(f.x, 'wi-one') + (f.kind === 'have' ? '<span class="wi-mark yes">&#10003;</span>' : f.kind === 'havent' ? '<span class="wi-mark no">&#10007;</span>' : '') + '</div>';
+  if (s && s.item) return '<div class="bigpic">' + pic(itemById[s.item]) + '</div>';
+  return '';
+}
+function bodyWriteIt(q, st) {
+  const f = q.fid ? frameById[q.fid] : null;
+  let prompt = '', target = '', hint = 'Big letter at the start. Full stop at the end.';
+  if (q.m === 'copyw') { prompt = 'Copy the word.'; target = '<div class="bigtext">' + esc(q.model) + '</div>'; hint = ''; }
+  else if (q.m === 'copys') { prompt = 'Copy the sentence.'; target = '<div class="bigtext">' + esc(q.model) + '</div>'; }
+  else if (q.m === 'order') { prompt = 'Put the words in order. Write the sentence.'; target = '<div class="wi-chips">' + q.chips.map(w => '<span class="wi-chip">' + esc(w) + '</span>').join('') + '</div>'; }
+  else {
+    prompt = f.kind === 'pos' ? 'Look at the picture. Write a sentence.' : f.kind === 'have' ? 'Write what you have got.' : f.kind === 'havent' ? "Write what you haven't got." : 'What is this? Write a sentence.';
+    const A = f.a ? WI.nouns[f.a].noun : '', B = f.b ? WI.nouns[f.b].noun : '', X = f.x ? WI.nouns[f.x].noun : '';
+    target = '<div class="wi-chips">' + (f.kind === 'pos' ? '<span class="wi-chip">' + esc(A) + '</span><span class="wi-dash">&ndash;</span><span class="wi-chip">' + esc(B) + '</span>' : '<span class="wi-chip">' + (f.kind === 'have' ? '&#10003; ' : f.kind === 'havent' ? '&#10007; ' : '') + esc(X) + '</span>') + '</div>';
+    hint += ' You can add more details.';
+    if (q.borrowed) hint += ' (This unit has no picture sentences yet, so here is one from another unit.)';
+  }
+  const may = st.solved || st.attempts >= 2;
+  return '<div class="prompt"><div><h2>' + prompt + '</h2>' + (hint ? '<div class="sub">' + hint + '</div>' : '') + '</div></div>' +
+    '<div class="twocol">' + '<div>' + wiPicture(q) + '</div><div>' + target + '</div></div>' +
+    '<div id="wiPad"></div>' +
+    '<div class="gfoot"><button class="btn btn-green" data-act="wcheck">Check</button><button class="btn" id="wiNext" data-act="next"' + (may ? '' : ' disabled') + '>' + (st.solved ? 'Next' : 'Next (skip)') + '</button></div>' +
+    '<div id="wiRes" aria-live="polite">' + (st.resHtml || '') + '</div>';
+}
+function wiEvaluate(q, text) {
+  if (q.m !== 'guided') return checkAnswer(q.model.replace(/’/g, "'"), text.replace(/’/g, "'"));
+  return checkFrame(frameForCheck(frameById[q.fid]), text, { dict: LEX });
+}
+function wiResultHtml(q, text, r) {
+  const my = (r.my || []).map(w => w.bad ? '<span class="bad">' + esc(w.text) + '</span>' : esc(w.text)).join(' ');
+  let h = '<div class="cmp"><small>Teacher’s answer</small><span class="good">' + esc(q.model) + '</span>' + (q.m === 'guided' ? ' <small style="display:inline">(other good sentences are OK too)</small>' : '') + '</div>' +
+    '<div class="cmp"><small>My answer</small>' + (my || '<i>(empty)</i>') + '</div>';
+  if (r.ok) {
+    h += '<div class="ok">' + (q.m === 'copyw' ? 'Perfect!' : 'Perfect! Big letter, spaces and full stop are all correct.') + '</div>';
+    if (r.extras && r.extras.length) h += '<div class="star">&#9733; Extra details: ' + esc(r.extras.map(e => e.text).join(', ')) + '. Great sentence!</div>';
+    if (r.reviewNeeded) h += '<div class="note2">Your teacher will check: ' + esc(r.review.join('; ')) + '</div>';
+  } else h += '<h3 class="fixh">What should I correct?</h3><ul class="fix">' + r.issues.map(x => '<li>' + esc(x.say) + '</li>').join('') + '</ul>';
+  return h;
 }
 
 function optBtn(q, st, id, inner, cls) {
@@ -423,7 +523,7 @@ async function renderStudent() {
     return '<tr><td>' + esc(nm) + '</td>' + cells + '</tr>';
   }).join('');
   const recent = mine.slice().sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0)).slice(0, 6);
-  const practice = [...new Set(recent.flatMap(r => Array.isArray(r.mistakes) ? r.mistakes : []))].slice(0, 14);
+  const practice = [...new Set(recent.flatMap(r => Array.isArray(r.mistakes) ? r.mistakes : []))].filter(m => !/^Teacher check:/.test(m)).slice(0, 14);
   let comment = '';
   try { const r = await fetch('/api/comment?name=' + encodeURIComponent(currentStudent.name) + '&className=' + encodeURIComponent(currentStudent.className)); if (r.ok) { const j = await r.json(); comment = j.comment || ''; } } catch (e) {}
   const tpRow = [['Listening', 'Listen'], ['Speaking', 'Speak'], ['Reading', 'Read'], ['Writing', 'Write']].map(([d, l]) =>
@@ -482,7 +582,7 @@ function drawTeacher() {
     .map(([l, v]) => '<div class="sumcard"><span>' + l + '</span><b>' + v + '</b></div>').join('');
   const prow = Object.entries(pupils).sort((a, b) => a[0].localeCompare(b[0])).map(([k, rs]) => {
     const t = dskpTPs(rs), spk = rs.filter(r => (parseSlug(r.game) || {}).skill === 'speak').length;
-    const wrong = [...new Set(rs.flatMap(r => r.mistakes || []))];
+    const wrong = [...new Set(rs.flatMap(r => r.mistakes || []))].filter(m => !/^Teacher check:/.test(m));
     const a = Math.round(rs.reduce((x, r) => x + (r.percentage || 0), 0) / rs.length);
     const cm = comments[k] != null ? comments[k] : '';
     const cell = d => '<td title="' + esc(t[d] ? tpDesc(d, t[d]) : '') + '">' + tpBadge(t[d], t.pcts[d]) + '</td>';
@@ -501,6 +601,8 @@ function drawTeacher() {
     const [u, s] = k.split('|'), sk = SKILL[s];
     return '<div class="gap-item">' + (u === 'mix' ? 'Mixed units' : 'Unit ' + u.slice(1) + ' ' + esc(UNITS[+u.slice(1)].name)) + ' &middot; ' + sk.label + ': ' + v.low + ' of ' + v.n + ' pupils at TP2 or below<br><span class="note">DSKP ' + sk.std.map(c => c + ' ' + esc(C.stdTitles[c] || '')).join('; ') + '</span></div>';
   }).join('') || '<span class="note">No gaps yet.</span>';
+  const toCheck = recs.slice().sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0)).flatMap(r => (r.mistakes || []).filter(m => /^Teacher check:/.test(m)).map(m => ({ r, text: m.replace(/^Teacher check:\s*/, '') }))).slice(0, 12);
+  const checkHtml = toCheck.length ? toCheck.map(c => '<div class="gap-item"><b>' + esc(c.r.name) + ' (' + esc(c.r.className) + ')</b>: ' + esc(c.text) + '</div>').join('') : '<span class="note">Nothing to check. Sentences with extra details that the app could not check will appear here.</span>';
   const log = recs.slice().sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0)).slice(0, 120).map(r => {
     const p = parseSlug(r.game) || {}, sk = SKILL[p.skill], tp = sk && sk.id !== 'speak' ? pct2tp(r.percentage || 0) : null;
     return '<tr><td>' + esc(r.name) + '</td><td>' + esc(r.className) + '</td><td>' + (p.unit === 'mix' ? 'Mixed' : p.unit ? 'Unit ' + p.unit.slice(1) : esc(r.game)) + '</td><td>' + (sk ? sk.label : '') + '</td><td>' + (p.level || '') + '</td><td>' + r.score + '/' + r.total + '</td><td>' + r.percentage + '%</td><td title="' + esc(tp ? tpDesc(sk.dskp, tp) : '') + '">' + (tp ? tpBadge(tp) : '-') + '</td><td>' + (r.timeSeconds != null ? formatTime(r.timeSeconds) : '-') + '</td><td>' + (r.timestamp ? new Date(r.timestamp).toLocaleString() : '') + '</td></tr>';
@@ -514,6 +616,7 @@ function drawTeacher() {
     '<h3 class="sec">TP by pupil (best attempt)</h3><div class="tbl-wrap"><table><thead><tr><th>Pupil</th><th>Class</th><th>Listening</th><th>Speaking</th><th>Reading</th><th>Writing</th><th>Overall TP</th><th>Comment</th></tr></thead><tbody>' + (prow || '<tr><td colspan="8">No results yet.</td></tr>') + '</tbody></table></div>' +
     '<p class="note">TP is a guide worked out from game scores (0-29% TP1, 30-44% TP2, 45-59% TP3, 60-74% TP4, 75-89% TP5, 90-100% TP6). Speaking is checked by you: the game only shows how many rounds were done. Hover a TP to see the DSKP descriptor.</p>' +
     '<h3 class="sec">Needs more practice</h3>' + gaps +
+    '<h3 class="sec">Writing to check</h3>' + checkHtml +
     '<h3 class="sec">Activity log</h3><div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Class</th><th>Unit</th><th>Skill</th><th>Star</th><th>Score</th><th>%</th><th>TP</th><th>Time</th><th>When</th></tr></thead><tbody>' + (log || '<tr><td colspan="10">No results yet.</td></tr>') + '</tbody></table></div>' +
     '<h3 class="sec">TP guide</h3><div class="tpguide">' + guide + '</div>';
 }
@@ -547,7 +650,22 @@ const acts = {
     else { const u = +d.u; const had = sel.units.length === 5 ? [] : sel.units; const s = had.includes(u) ? had.filter(x => x !== u) : [...had, u]; sel.units = s.length ? s : [u]; }
     saveSession(); render();
   },
-  skill(d) { sel.skill = d.s; saveSession(); render(); },
+  skill(d) { if (!(d.s === 'write' && sel.skill === 'writeit' && d.fromTop)) sel.skill = d.s; saveSession(); render(); },
+  wcheck() {
+    if (!wiPad) return;
+    wiPad.flush();
+    const q = G.qs[G.idx], st = G.st, text = wiPad.getText();
+    const res = $('wiRes');
+    if (!text.trim()) { res.innerHTML = '<div class="msg no">Write your answer first.</div>'; return; }
+    st.attempts++;
+    const r = wiEvaluate(q, text);
+    if (r.ok) { if (st.attempts === 1) G.res[G.idx] = 1; st.solved = true; beep(true); }
+    else { if (st.attempts === 1) { G.res[G.idx] = 0; addMistake(q.model); } beep(false); }
+    if (r.reviewNeeded && !st.flagged) { st.flagged = true; addMistake('Teacher check: ' + text.trim()); }
+    st.resHtml = wiResultHtml(q, text, r); res.innerHTML = st.resHtml;
+    const nb = $('wiNext'); if (nb) { nb.disabled = !(st.solved || st.attempts >= 2); nb.textContent = st.solved ? 'Next' : 'Next (skip)'; }
+    saveSession();
+  },
   level(d) { sel.level = +d.l; saveSession(); render(); },
   start() { startGame(); },
   quit() { if (window.confirm('Stop this game?')) { G = null; view = 'home'; saveSession(); render(); } },
@@ -564,10 +682,10 @@ const acts = {
     if (ok) { if (q.k === 'tap' || q.k === 'w2p' || q.k === 'p2w' || q.k === 's2p' || q.k === 'letter') say('en', q.sid || q.id); }
   },
   next() {
-    const st = G.st; if (!(st.solved || st.said)) return;
+    const st = G.st; if (!(st.solved || st.said || (G.skill === 'writeit' && st.attempts >= 2))) return;
     if (st.said && G.res[G.idx] == null) G.res[G.idx] = 1;
     G.idx++; G.st = newSt();
-    if (G.idx >= ROUND) { finishGame(); return; }
+    if (G.idx >= totalOf(G)) { finishGame(); return; }
     saveSession(); render(); autoplay();
   },
   tile(d) {
@@ -620,7 +738,7 @@ const acts = {
   },
   suggest(d) {
     const rs = teacherData.records.filter(r => r.name + '__' + r.className === d.k);
-    const words = [...new Set(rs.flatMap(r => r.mistakes || []))];
+    const words = [...new Set(rs.flatMap(r => r.mistakes || []))].filter(m => !/^Teacher check:/.test(m));
     const ta = $('cm-' + d.k); if (ta) ta.value = suggestComment(rs[0].name, +d.a, words);
   },
   async savecm(d) {
