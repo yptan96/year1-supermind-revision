@@ -540,19 +540,53 @@ async function renderStudent() {
     '<div class="card" style="margin-top:14px"><div class="label">Words to practise</div>' + (practice.length ? practice.map(w => '<span class="practice-chip">' + esc(w) + '</span>').join('') : (mine.length ? '<span style="font-weight:800;color:#2B8A3E">No mistakes. Awesome!</span>' : '<span class="note">Play a game to see your words here.</span>')) + '</div>' +
     renderLeaderboard(records);
 }
-function renderLeaderboard(records) {
-  const slugs = [...new Set(records.map(r => r.game).filter(parseSlug))].sort();
-  if (!slugs.length) return '<div class="card" style="margin-top:14px"><div class="label">Leaderboard</div><span class="note">No scores yet. Be the first!</span></div>';
-  const cur = window._lbSlug && slugs.includes(window._lbSlug) ? window._lbSlug : slugs[0];
-  const best = {};
-  records.filter(r => r.game === cur).forEach(r => {
-    const k = r.name + '__' + r.className, e = best[k];
-    if (!e || r.percentage > e.percentage || (r.percentage === e.percentage && (r.timeSeconds ?? 1e9) < (e.timeSeconds ?? 1e9))) best[k] = r;
+/* ---------- leaderboards: Star Champions (all games) + Game boards (one game at a time). Ranked by total stars, never by time. ---------- */
+let lbClassOnly = true, lbSkill = null, lbUnit = 'all';
+const starOfPct = p => p >= 90 ? 3 : p >= 70 ? 2 : p >= 40 ? 1 : 0;
+const normKey = s => String(s == null ? '' : s).trim().toLowerCase();
+// total stars per pupil = best result for each unit + skill + star level, added up (replaying the same game cannot add more than 3 stars)
+function boardRows(records, f) {
+  const by = {};
+  records.forEach(r => {
+    const g = parseSlug(r.game); if (!g) return;
+    if (f.skill && g.skill !== f.skill) return;
+    if (f.unit && f.unit !== 'all' && g.unit !== f.unit) return;
+    if (f.cls && normKey(r.className) !== f.cls) return;
+    const pk = normKey(r.name) + '__' + normKey(r.className);
+    const o = by[pk] = by[pk] || { name: r.name, cls: r.className, c: {} };
+    const ck = g.unit + '|' + g.skill + '|' + g.level;
+    o.c[ck] = Math.max(o.c[ck] || 0, r.percentage || 0);
   });
-  const top = Object.values(best).sort((a, b) => b.percentage - a.percentage || (a.timeSeconds ?? 1e9) - (b.timeSeconds ?? 1e9)).slice(0, 10);
-  const nice = g => { const p = parseSlug(g); return (p.unit === 'mix' ? 'Mixed units' : 'Unit ' + p.unit.slice(1)) + ' - ' + SKILL[p.skill].label + ' - Star ' + p.level; };
-  return '<div class="card" style="margin-top:14px"><div class="label">Leaderboard</div><select id="lbSel" class="form-input" style="min-height:48px;font-size:16px;margin-bottom:10px">' + slugs.map(s => '<option value="' + s + '"' + (s === cur ? ' selected' : '') + '>' + esc(nice(s)) + '</option>').join('') + '</select>' +
-    '<table><thead><tr><th>#</th><th>Name</th><th>Score</th><th>Time</th></tr></thead><tbody>' + top.map((r, i) => '<tr><td>' + (i + 1) + '</td><td>' + esc(r.name) + ' (' + esc(r.className) + ')</td><td>' + r.percentage + '%</td><td>' + (r.timeSeconds != null ? formatTime(r.timeSeconds) : '-') + '</td></tr>').join('') + '</tbody></table></div>';
+  const rows = Object.entries(by).map(([pk, o]) => ({ pk, name: o.name, cls: o.cls, stars: Object.values(o.c).reduce((a, p) => a + starOfPct(p), 0), games: Object.keys(o.c).length }));
+  rows.sort((a, b) => b.stars - a.stars || b.games - a.games || a.name.localeCompare(b.name));
+  let rank = 0, prev = null;
+  rows.forEach((r, i) => { const key = r.stars + '|' + r.games; if (key !== prev) { rank = i + 1; prev = key; } r.rank = rank; });
+  return rows;
+}
+function boardTable(rows, meKey, showClass) {
+  if (!rows.length) return '<p class="note">No stars here yet. Be the first!</p>';
+  const top = rows.slice(0, 10), me = rows.find(r => r.pk === meKey);
+  const line = (r, extra) => '<tr' + (r.pk === meKey ? ' class="me"' : '') + '><td>' + r.rank + '</td><td>' + esc(r.name) + (showClass ? ' (' + esc(r.cls) + ')' : '') + '</td><td>&#9733; ' + r.stars + '</td><td>' + r.games + '</td></tr>';
+  let h = '<table class="lb"><thead><tr><th>#</th><th>Name</th><th>Stars</th><th>Games</th></tr></thead><tbody>' + top.map(line).join('') + '</tbody></table>';
+  if (me && !top.includes(me)) h += '<table class="lb"><tbody>' + line(me) + '</tbody></table>';
+  h += '<p class="note" style="margin-top:8px">' + (me ? 'You are number ' + me.rank + ' of ' + rows.length + '.' : 'Play a game to join the list!') + '</p>';
+  return h;
+}
+function renderLeaderboard(records) {
+  const me = currentStudent, meKey = normKey(me.name) + '__' + normKey(me.className), cls = lbClassOnly ? normKey(me.className) : '';
+  const mine = records.filter(r => normKey(r.name) + '__' + normKey(r.className) === meKey).sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+  if (!lbSkill) { const last = mine.length ? parseSlug(mine[0].game) : null; lbSkill = last ? last.skill : 'listen'; }
+  const toggle = '<div class="lb-toggle" role="group" aria-label="Which pupils to show">' +
+    '<button class="skill-btn' + (lbClassOnly ? ' on' : '') + '" data-act="lbclass" data-v="1" aria-pressed="' + lbClassOnly + '">My class (' + esc(me.className) + ')</button>' +
+    '<button class="skill-btn' + (!lbClassOnly ? ' on' : '') + '" data-act="lbclass" data-v="0" aria-pressed="' + !lbClassOnly + '">All classes</button></div>';
+  const overall = boardRows(records, { cls });
+  const skills = SKILLS.map(s => '<button class="skill-btn' + (lbSkill === s.id ? ' on' : '') + '" data-act="lbskill" data-s="' + s.id + '">' + s.label + '</button>').join('');
+  const units = ['all', 'u0', 'u1', 'u2', 'u3', 'u4'].map(u => '<button class="unit-chip' + (lbUnit === u ? ' on' : '') + '" data-act="lbunit" data-u="' + u + '">' + (u === 'all' ? 'All units' : 'Unit ' + u.slice(1)) + '</button>').join('');
+  const game = boardRows(records, { cls, skill: lbSkill, unit: lbUnit });
+  return '<div class="card" style="margin-top:14px"><h3 class="sec" style="margin-top:0">Star Champions</h3>' + toggle +
+    '<p class="note" style="margin:8px 0">All your stars from every game.</p>' + boardTable(overall, meKey, !lbClassOnly) + '</div>' +
+    '<div class="card" style="margin-top:14px"><h3 class="sec" style="margin-top:0">Game boards</h3><div class="skills" style="margin-bottom:10px">' + skills + '</div>' +
+    '<div class="unit-chips">' + units + '</div>' + boardTable(game, meKey, !lbClassOnly) + '</div>';
 }
 
 /* ---------- teacher view ---------- */
@@ -673,6 +707,9 @@ const acts = {
   },
   level(d) { sel.level = +d.l; saveSession(); render(); },
   start() { startGame(); },
+  lbclass(d) { lbClassOnly = d.v === '1'; renderStudent(); },
+  lbskill(d) { lbSkill = d.s; renderStudent(); },
+  lbunit(d) { lbUnit = d.u; renderStudent(); },
   quit() { if (window.confirm('Stop this game?')) { G = null; view = 'home'; saveSession(); render(); } },
   gohome() { G = null; view = 'home'; saveSession(); render(); },
   again() { startGame(); },
@@ -770,7 +807,6 @@ document.addEventListener('click', e => {
   const fn = acts[el.dataset.act]; if (fn) fn(el.dataset);
 });
 document.addEventListener('change', e => {
-  if (e.target.id === 'lbSel') { window._lbSlug = e.target.value; renderStudent(); }
   if (e.target.id === 'clsSel') { teacherClassFilter = e.target.value; drawTeacher(); }
 });
 
